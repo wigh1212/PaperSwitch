@@ -27,4 +27,13 @@ for(const name of await readdir('node_modules/tesseract.js-core'))if(name.endsWi
 
 
 await build({entryPoints:['src/qr-vendor.js'],outfile:'extension/vendor/qr.js',bundle:true,format:'esm',platform:'browser',minify:true});
-for(const name of ['qrcode','jsqr'])await copyFile('node_modules/'+name+'/LICENSE','extension/vendor/'+name+'-LICENSE');
+//for(const name of ['qrcode','jsqr'])await copyFile('node_modules/'+name+'/LICENSE','extension/vendor/'+name+'-LICENSE');
+await copyFile(
+  'node_modules/qrcode/license',
+  'extension/vendor/qrcode-LICENSE'
+);
+
+await copyFile(
+  'node_modules/jsqr/LICENSE',
+  'extension/vendor/jsqr-LICENSE'
+);
