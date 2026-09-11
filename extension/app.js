@@ -108,3 +108,6 @@ initLanguages();
 
 
 
+
+// Dedicated web pages choose their conversion before interaction.
+if(document.body.dataset.toolMode && modes[document.body.dataset.toolMode]) switchMode(document.body.dataset.toolMode);

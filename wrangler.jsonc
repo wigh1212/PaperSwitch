@@ -1,7 +1,11 @@
 {
   "name": "paperswitch",
+  "main": "web/worker.js",
   "compatibility_date": "2026-09-10",
   "assets": {
-    "directory": "./extension"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "not_found_handling": "404-page"
   }
 }

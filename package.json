@@ -4,11 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs && node scripts/build-web.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node tests/browser.mjs",
     "check:dependencies": "node scripts/check-dependencies.mjs",
-    "test:qr": "node tests/qr-browser.mjs"
+    "test:qr": "node tests/qr-browser.mjs",
+    "build:extension": "node scripts/build.mjs",
+    "build:web": "node scripts/build-web.mjs",
+    "test:web": "node tests/web-browser.mjs",
+    "preview": "node scripts/preview-web.mjs",
+    "test:web:locales": "node tests/web-locales.mjs",
+    "test:web:routing": "node tests/web-routing.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",
