@@ -1,0 +1,2 @@
+export const ocrLanguages=[["kor+eng","한국어 + English"],["eng","English"],["jpn+eng","日本語 + English"],["chi_sim+eng","简体中文 + English"],["chi_tra+eng","繁體中文 + English"],["fra+eng","Français + English"],["deu+eng","Deutsch + English"],["spa+eng","Español + English"],["por+eng","Português + English"]];
+export function resolveOCRLanguage(value='kor+eng'){if(!ocrLanguages.some(([code])=>code===value))throw new Error('Unsupported OCR language.');return value;}

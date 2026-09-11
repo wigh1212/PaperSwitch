@@ -1,0 +1,24 @@
+{
+  "name": "paper-switch",
+  "version": "0.5.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "check:dependencies": "node scripts/check-dependencies.mjs",
+    "test:qr": "node tests/qr-browser.mjs"
+  },
+  "dependencies": {
+    "esbuild": "0.28.2",
+    "fflate": "0.8.2",
+    "jspdf": "4.2.1",
+    "jsqr": "1.4.0",
+    "mupdf": "1.28.0",
+    "qrcode": "1.5.4",
+    "svg2pdf.js": "2.8.1",
+    "tesseract.js": "6.0.1",
+    "tesseract.js-core": "6.0.0"
+  }
+}

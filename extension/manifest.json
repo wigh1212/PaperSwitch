@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Paper Switch · File Converter",
+  "version": "0.5.1",
+  "description": "Convert PDF, SVG and images on your device. Batch processing and Korean/English OCR. UI: English, Korean, Japanese, Chinese.",
+  "action": {
+    "default_title": "Open Paper Switch"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' blob: data:; style-src 'self'; object-src 'none'; base-uri 'none'"
+  }
+}
+
