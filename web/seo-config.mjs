@@ -1,4 +1,4 @@
-export const SITE_ORIGIN='https://saerokbit.com';
+export const SITE_ORIGIN='https://paperswitch.saerokbit.com';
 export const locales=[
  {language:'en',prefix:'',name:'English'},
  {language:'ko',prefix:'ko',name:'한국어'},

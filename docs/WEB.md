@@ -19,7 +19,7 @@ The homepage links to every tool. About, contact and privacy pages are generated
 
 ## Search behavior
 
-The build generates 160 localized HTML pages and sitemap.xml for https://saerokbit.com. English keeps its existing root URLs; Korean uses /ko/, Japanese /ja/, and Simplified Chinese /zh-cn/. Each HTML has canonical, reciprocal hreflang links and language-specific content before JavaScript. CSS and JavaScript assets remain crawlable. Legacy HTML assets, error pages and preview hosts are noindex. The Worker normalizes URL aliases and redirects www and HTTP to the primary domain.
+The build generates 160 localized HTML pages and sitemap.xml for https://paperswitch.saerokbit.com. English keeps its existing root URLs; Korean uses /ko/, Japanese /ja/, and Simplified Chinese /zh-cn/. Each HTML has canonical, reciprocal hreflang links and language-specific content before JavaScript. CSS and JavaScript assets remain crawlable. Legacy HTML assets, error pages and preview hosts are noindex. The Worker normalizes URL aliases and redirects www and HTTP to the primary domain.
 
 ## Validation
 
