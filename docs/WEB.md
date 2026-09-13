@@ -15,7 +15,7 @@ The Chrome extension remains in `extension/`. The website is built separately in
 
 The 36 tools are defined in `web/tools.mjs`. `scripts/build-web.mjs` generates separate HTML documents containing unique titles, descriptions, instructions and limitations before JavaScript runs. Conversion pages set a mode on the shared engine. QR creation and reading have separate visible workspaces.
 
-The homepage links to every tool. About, contact and privacy pages are generated with the public contact address glsrhfo17@gmail.com. No advertising or analytics scripts have been added.
+The homepage links to every tool. About, contact and privacy pages are generated with the public contact address glsrhfo17@gmail.com. Google AdSense is loaded once in the head of each public content page. The publisher ID is ca-pub-6110796878581495. The 404 page and extension assets do not load advertising.
 
 ## Search behavior
 
@@ -27,7 +27,7 @@ The Worker creates /sitemap.xml, /robots.txt, canonical and Open Graph URLs from
 
 With Wrangler running on port 4174, run `node tests/web-routing.mjs` to check production routing, sitemap, canonical links and stylesheet delivery.
 
-Changes are local until committed and pushed to the connected repository. This implementation does not submit an AdSense application or install advertisement code.
+Changes are local until committed and pushed to the connected repository. This implementation includes the AdSense site code. Site approval and Auto ads settings are managed in the AdSense account; adding the script alone does not guarantee that ads will appear.
 
 
 ## Shared navigation and languages
