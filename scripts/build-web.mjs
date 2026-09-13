@@ -35,7 +35,7 @@ for(const t of tools){
  }
  const steps=t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
  :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.'];
- const related=tools.filter(x=>x.slug!==t.slug&&(t.type==='convert'?x.input===t.input:x.type!=='convert')).slice(0,4);
+ const related=tools.filter(x=>x.slug!==t.slug&&(t.type==='convert'?(x.input===t.input||(x.input===t.output&&x.output===t.input)||x.slug==='pdf-to-txt'):x.type!=='convert')).slice(0,4);
  html=html.replace('</main>','<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Related tools</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
@@ -52,3 +52,5 @@ await writeFile(out+'/404.html',shell('Page not found','Choose a tool from the h
 await writeFile(out+'/favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#28684f"/><path d="M7 11h18l-5-5M25 21H7l5 5" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 await writeFile(out+'/_headers','/assets/*\n  X-Robots-Tag: noindex\n');
 console.log('Built '+tools.length+' tools with shared navigation and four-language UI.');
+
+await import('./build-seo.mjs');

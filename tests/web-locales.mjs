@@ -1,3 +1,6 @@
+import {seoRows} from '../web/seo-copy.mjs';
+import {registerTranslations,translate} from '../extension/i18n.js';
+registerTranslations(seoRows);
 import {mkdir} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
@@ -5,6 +8,7 @@ import {tools} from '../web/tools.mjs';
 const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1280,height:950}});
+await page.route('https://pagead2.googlesyndication.com/**',route=>route.fulfill({contentType:'text/javascript',body:''}));
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await mkdir('test-results',{recursive:true});
 const missing=new Set();let logo;
@@ -20,13 +24,13 @@ try{
   });
   for(const lang of ['ko','ja','zh-CN','en']){
    await page.selectOption('#language',lang);
-   assert.equal(await page.getAttribute('html','lang'),lang);assert.equal(await page.title(),await page.locator('h1').textContent()+' | Paper Switch');
+   assert.equal(await page.getAttribute('html','lang'),lang);assert.equal(await page.title(),(path==='/'?translate(seoRows[0][0],lang):await page.locator('h1').textContent())+' | Paper Switch');
    const box=await page.locator('.brand').boundingBox();const shape=[box.width,box.height];
    if(!logo)logo=shape;assert.deepEqual(shape,logo,'Logo geometry '+path+' '+lang);
    if(lang!=='en'){
     assert.notEqual(await page.locator('h1').textContent(),en);assert.notEqual(await page.getAttribute('meta[name="description"]','content'),enDescription);
     const remaining=await page.evaluate(()=>window.localeAudit.filter(({el,text})=>el.checkVisibility()&&el.textContent.trim()===text).map(v=>v.text));
-    for(const s of remaining)if(!/^(PDF|PNG|JPG|SVG|WebP|TIFF|TXT|UTF-8|English|한국어|日本語|简体中文|\d|glsrhfo17)/.test(s))missing.add(lang+': '+s);
+    for(const s of remaining)if(!/^(PDF|PNG|JPG|SVG|WEBP|TIFF|TXT|UTF-8|English|한국어|日本語|简体中文|\d|glsrhfo17)/.test(s))missing.add(lang+': '+s);
    }
    assert((await page.getAttribute('meta[name="description"]','content')).length>0);
   }
@@ -37,7 +41,7 @@ try{
  await page.locator('[data-source="png"]').click();assert(await page.locator('#group-png').isVisible());
  const pngMenu=page.locator('.format-menu').filter({has:page.locator('summary',{hasText:/^PNG$/})});
  await pngMenu.hover();assert(await pngMenu.getAttribute('open')!==null);
- await pngMenu.locator('a[href="/png-to-svg"]').click();
+ await pngMenu.locator('a[data-page-path="/png-to-svg"]').click();
  await page.waitForSelector('body[data-ready]');assert.equal(await page.getAttribute('html','lang'),'ko');
  assert.equal(await page.locator('h1').textContent(),'PNG → SVG 변환');
  await page.locator('#file').setInputFiles({name:'original-English-한국어.png',mimeType:'image/png',buffer:Buffer.from('bad')});
@@ -56,5 +60,3 @@ try{
  assert.deepEqual(errors,[]);console.log('MISSING',JSON.stringify([...missing],null,2));assert.equal(missing.size,0);
  console.log('PASS four-language coverage on '+(tools.length+4)+' pages, fixed logo, menus, persistence and mobile');
 }finally{await browser.close();}
-
-

@@ -5,15 +5,15 @@ const exact=new Map(),patterns=[];
 export function registerTranslations(rows){
  for(const row of rows){
   if(row.length!==4||row.some(value=>typeof value!=='string'||!value.trim()))throw new Error('Incomplete translation');
-  exact.set(row[0],row);exact.set(row[1],row);
-  for(const column of [0,1]){
+  for(const value of row)exact.set(value,row);
+  for(const column of [0,1,2,3]){
    const keys=[];let cursor=0,expression='';
    for(const match of row[column].matchAll(/\{(\d+)\}/g)){expression+=escape(row[column].slice(cursor,match.index))+'(.+?)';keys.push(Number(match[1]));cursor=match.index+match[0].length;}
    expression+=escape(row[column].slice(cursor));
-   patterns.push({row,keys,prefix:row[column].split(/\{\d+\}/)[0].length,regex:new RegExp('^'+expression+'$')});
+   patterns.push({row,keys,literal:row[column].replace(/\{\d+\}/g,'').length,prefix:row[column].split(/\{\d+\}/)[0].length,regex:new RegExp('^'+expression+'$')});
   }
  }
- patterns.sort((a,b)=>b.prefix-a.prefix);
+ patterns.sort((a,b)=>b.prefix-a.prefix||b.literal-a.literal);
 }
 registerTranslations(messages);
 export function translate(source,language='en',depth=0){
@@ -30,6 +30,7 @@ export function translate(source,language='en',depth=0){
  return source;
 }
 let language='en';try{const saved=globalThis.localStorage?.getItem('paper-switch-language');if(languages.includes(saved))language=saved;}catch{}
+export function setLanguage(value){if(languages.includes(value))language=value;}
 const dynamic=new Map();
 export function setText(element,source){dynamic.set(element,String(source));element.textContent=translate(String(source),language);}
 let initialized=false;
@@ -55,6 +56,6 @@ export function initLanguages(){
   for(const {element,key,source} of attributes)element.setAttribute(key,translate(source,language));
   for(const [element,source] of dynamic){if(!element.isConnected){dynamic.delete(element);continue;}element.textContent=translate(source,language);}
  }
- selector.addEventListener('change',()=>{language=selector.value;try{localStorage.setItem('paper-switch-language',language);}catch{}render();});
+ selector.addEventListener('change',()=>{language=selector.value;try{localStorage.setItem('paper-switch-language',language);}catch{}render();document.dispatchEvent(new CustomEvent('paper-language-change',{detail:{language}}));});
  render();
 }

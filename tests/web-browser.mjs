@@ -5,6 +5,7 @@ import {tools} from '../web/tools.mjs';
 const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1280,height:900}});
+await page.route('https://pagead2.googlesyndication.com/**',route=>route.fulfill({contentType:'text/javascript',body:''}));
 const errors=[];page.on('pageerror',error=>errors.push(error.message));
 await mkdir('test-results',{recursive:true});
 try{

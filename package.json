@@ -14,7 +14,8 @@
     "test:web": "node tests/web-browser.mjs",
     "preview": "node scripts/preview-web.mjs",
     "test:web:locales": "node tests/web-locales.mjs",
-    "test:web:routing": "node tests/web-routing.mjs"
+    "test:web:routing": "node tests/web-routing.mjs",
+    "test:web:seo": "node tests/web-seo.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",
@@ -22,6 +23,7 @@
     "jspdf": "4.2.1",
     "jsqr": "1.4.0",
     "mupdf": "1.28.0",
+    "parse5": "8.0.0",
     "qrcode": "1.5.4",
     "svg2pdf.js": "2.8.1",
     "tesseract.js": "6.0.1",

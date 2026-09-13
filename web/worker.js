@@ -1,19 +1,20 @@
 import {tools} from './tools.mjs';
-const paths=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
+import {SITE_ORIGIN,locales,localizedPath,splitPath} from './seo-config.mjs';
+const routes=new Set(['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy']);
 export default {
  async fetch(request,env){
-  const url=new URL(request.url);
-  if(url.pathname==='/robots.txt')return new Response('User-agent: *\nAllow: /\nDisallow: /assets/\nSitemap: '+url.origin+'/sitemap.xml\n',{headers:{'content-type':'text/plain; charset=utf-8'}});
-  if(url.pathname==='/sitemap.xml')return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+paths.map(path=>'<url><loc>'+url.origin+path+'</loc></url>').join('')+'</urlset>',{headers:{'content-type':'application/xml; charset=utf-8'}});
-  let path=url.pathname.replace(/\/$/,'')||'/';
-  if(path==='/index.html')path='/';
-  else if(path.endsWith('.html'))path=path.slice(0,-5);
-  if(paths.includes(path)&&path!==url.pathname){url.pathname=path;return Response.redirect(url.toString(),301);}
+  const url=new URL(request.url),primary=new URL(SITE_ORIGIN);
+  if(url.hostname==='www.'+primary.hostname||(url.hostname===primary.hostname&&url.protocol!=='https:')){
+   const target=new URL(url.pathname+url.search,SITE_ORIGIN);return Response.redirect(target.href,301);
+  }
+  const preview=url.hostname!==primary.hostname;
+  if(url.pathname==='/robots.txt'&&preview&&!['localhost','127.0.0.1'].includes(url.hostname))return new Response('User-agent: *\nDisallow: /\n',{headers:{'content-type':'text/plain; charset=utf-8'}});
+  const {language,base}=splitPath(url.pathname),canonicalPath=localizedPath(base,language);
+  if(routes.has(base)&&url.pathname!==canonicalPath){url.pathname=canonicalPath;return Response.redirect(url.href,301);}
   const response=await env.ASSETS.fetch(request);
-  if(url.pathname.startsWith('/assets/')){const asset=new Response(response.body,response);asset.headers.set('X-Robots-Tag','noindex');return asset;}
-  if(response.status!==200||!paths.includes(path)||!response.headers.get('content-type')?.includes('text/html'))return response;
-  const canonical=url.origin+path;
-  return new HTMLRewriter().on('head',{element(el){el.append('<link rel="canonical" href="'+canonical+'"><meta property="og:url" content="'+canonical+'">',{html:true});}}).transform(response);
+  if(preview||url.pathname.startsWith('/assets/')||response.status===404){
+   const updated=new Response(response.body,response);updated.headers.set('X-Robots-Tag','noindex');return updated;
+  }
+  return response;
  }
 };
-

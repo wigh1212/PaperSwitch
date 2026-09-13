@@ -19,7 +19,7 @@ The homepage links to every tool. About, contact and privacy pages are generated
 
 ## Search behavior
 
-The Worker creates /sitemap.xml, /robots.txt, canonical and Open Graph URLs from the current deployment origin. It redirects .html and trailing-slash variants to clean tool URLs and serves a real 404 for unknown routes. Asset copies of the legacy HTML are excluded from crawling and marked noindex. If a custom domain replaces workers.dev, configure Cloudflare to redirect the old hostname to the final domain so both origins are not indexed independently.
+The build generates 160 localized HTML pages and sitemap.xml for https://saerokbit.com. English keeps its existing root URLs; Korean uses /ko/, Japanese /ja/, and Simplified Chinese /zh-cn/. Each HTML has canonical, reciprocal hreflang links and language-specific content before JavaScript. CSS and JavaScript assets remain crawlable. Legacy HTML assets, error pages and preview hosts are noindex. The Worker normalizes URL aliases and redirects www and HTTP to the primary domain.
 
 ## Validation
 
@@ -37,3 +37,7 @@ The header is identical on every page. Format menus support hover, click, keyboa
 English, Korean, Japanese and Simplified Chinese share the translation service. web/copy.mjs provides the website copy; the extension catalog covers conversion controls and results. The selected language persists between pages. Brand markup is excluded from translation. Titles and description metadata also update with the selected language.
 
 Run pnpm run test:web:locales with PLAYWRIGHT_MODULE set to check every page in all four languages, metadata, logo geometry, navigation, mobile layout, and file selection retention.
+
+## Multilingual SEO verification
+
+With Wrangler running on port 4174, set PLAYWRIGHT_MODULE and run pnpm run test:web:seo. It checks all 160 raw HTML pages and responses, no-JavaScript content, metadata, sitemap, language switching and file retention. See docs/SEO-AUDIT.md for the live-site audit and post-deployment steps.
