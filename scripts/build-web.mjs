@@ -2,6 +2,7 @@ import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
+await cp('web/ads.txt',out+'/ads.txt');
 await cp('extension',out+'/assets',{recursive:true,filter:path=>!path.endsWith('manifest.json')&&!path.endsWith('background.js')});
 for(const file of ['site.css','site.js','copy.mjs'])await cp('web/'+file,out+'/'+(file==='copy.mjs'?'copy.js':file));
 const menuLabel=t=>t.slug.includes('-to-')?label(t.input)+' → '+label(t.output):escape(t.title);
