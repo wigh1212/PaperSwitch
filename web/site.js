@@ -1,9 +1,11 @@
 import {SITE_ORIGIN,localizedPath,splitPath,structuredData} from '/seo-config.js';
 import {seoRows} from '/seo-copy.js';
+import {searchRows} from '/search-copy.js';
 import {initLanguages,registerTranslations,setLanguage} from '/assets/i18n.js';
 import {rows} from '/copy.js';
 registerTranslations(rows);
 registerTranslations(seoRows);
+registerTranslations(searchRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);
 const menus=[...document.querySelectorAll('.format-menu')];
 const closeMenus=except=>menus.forEach(menu=>{if(menu!==except)menu.open=false;});

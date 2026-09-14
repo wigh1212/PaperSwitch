@@ -7,7 +7,8 @@ import {SITE_ORIGIN,locales,localizedPath,structuredData} from '../web/seo-confi
 import {translate,registerTranslations} from '../extension/i18n.js';
 import {rows} from '../web/copy.mjs';
 import {seoRows,faqsFor,faqPairs} from '../web/seo-copy.mjs';
-registerTranslations(rows);registerTranslations(seoRows);
+import {searchCopy,searchRows} from '../web/search-copy.mjs';
+registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchRows(tools));
 const origin=process.env.WEB_BASE_URL||'http://127.0.0.1:4174';
 const bases=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
 const routes=bases.flatMap(base=>locales.map(l=>({base,language:l.language,path:localizedPath(base,l.language)})));
@@ -23,7 +24,7 @@ for(const route of routes){
  for(const l of locales)assert.equal(attr(alternates.find(n=>attr(n,'hreflang')===l.language),'href'),SITE_ORIGIN+localizedPath(route.base,l.language));
  assert.equal(all.filter(n=>n.tagName==='h1').length,1);
  const tool=tools.find(t=>'/'+t.slug===route.base);
- if(tool){assert.equal(text(find(n=>n.tagName==='h1')),translate(tool.title,route.language));for(const index of faqsFor(tool))assert(all.some(n=>n.tagName==='h3'&&text(n)===translate(faqPairs[index][0],route.language)));}
+ if(tool){assert.equal(text(find(n=>n.tagName==='h1')),searchCopy(tool).title[locales.findIndex(l=>l.language===route.language)].split(' – ')[0]);for(const index of faqsFor(tool))assert(all.some(n=>n.tagName==='h3'&&text(n)===translate(faqPairs[index][0],route.language)));}
  if(route.base==='/')assert.equal(text(find(n=>n.tagName==='title')),translate(seoRows[0][0],route.language)+' | Paper Switch');
  const description=attr(find(n=>attr(n,'name')==='description'),'content');assert(description.trim().length>0,route.path);
  for(const link of all.filter(n=>n.tagName==='a'&&attr(n,'data-page-path')))assert.equal(attr(link,'href'),localizedPath(attr(link,'data-page-path'),route.language));
@@ -49,10 +50,10 @@ try{
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  for(const l of locales){
   await page.goto(origin+localizedPath('/pdf-to-jpg',l.language));await page.waitForSelector('body[data-ready]');
-  assert.equal(await page.locator('h1').textContent(),translate('PDF to JPG',l.language));
+  assert.equal(await page.locator('h1').textContent(),translate('PDF to JPG Converter',l.language));
   await page.selectOption('#language','en');
   assert.equal(new URL(page.url()).pathname,'/pdf-to-jpg');
-  assert.equal(await page.locator('h1').textContent(),'PDF to JPG');
+  assert.equal(await page.locator('h1').textContent(),'PDF to JPG Converter');
   assert.equal(await page.locator('.faq h3').first().textContent(),faqPairs[0][0]);
  }
  const {jsPDF}=await import('jspdf');const pdf=new jsPDF();pdf.text('SEO test',20,20);

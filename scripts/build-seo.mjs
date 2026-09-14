@@ -6,7 +6,10 @@ import {SITE_ORIGIN,locales,localizedPath,structuredData} from '../web/seo-confi
 import {registerTranslations,translate} from '../extension/i18n.js';
 import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
-registerTranslations(rows);registerTranslations(seoRows);
+import {searchCopy,searchRows} from '../web/search-copy.mjs';
+const searchTranslations=searchRows(tools);
+registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
 const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
 function set(n,k,v){n.attrs??=[];const a=n.attrs.find(a=>a.name===k);if(a)a.value=v;else n.attrs.push({name:k,value:v});}
@@ -34,7 +37,14 @@ for(const base of routes){
    set(find(doc,n=>attr(n,'property')==='og:title'),'content',seoRows[0][0]);
   }
   if(tool){
+   const copy=searchCopy(tool);
+   text(find(doc,n=>n.tagName==='title'),copy.title[0]+' | Paper Switch');
+   text(find(doc,n=>n.tagName==='h1'),copy.title[0].split(' – ')[0]);
+   for(const node of [find(doc,n=>attr(n,'name')==='description'),find(doc,n=>attr(n,'property')==='og:description')])set(node,'content',copy.description[0]);
+   set(find(doc,n=>attr(n,'property')==='og:title'),'content',copy.title[0]);
+   text(find(doc,n=>(attr(n,'class')||'').split(' ').includes('intro')),copy.description[0]);
    const guide=find(doc,n=>(attr(n,'class')||'').split(' ').includes('guide'));
+   if(guide){text(find(guide,n=>n.tagName==='h2'),copy.how[0]);append(guide,'<p>'+esc(copy.use[0])+'</p>');}
    const faqs=faqsFor(tool);
    if(guide&&faqs.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+faqs.map(i=>'<h3>'+esc(faqPairs[i][0])+'</h3><p>'+esc(faqPairs[i][1])+'</p>').join('')+'</section>');
    if(tool.type==='convert'){
