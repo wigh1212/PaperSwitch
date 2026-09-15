@@ -5,7 +5,7 @@ import {initLanguages,setText,registerTranslations} from './i18n.js';
 import {generateQR,decodeQR} from './services/qr-service.js';
 const $=id=>document.getElementById(id);
 let url=null,revision=0,selectedFrame='none';
-function clear(){revision++;if(url)URL.revokeObjectURL(url);url=null;$('qr-preview').replaceChildren();$('qr-download').hidden=true;$('qr-download').removeAttribute('href');setText($('qr-status'),'');}
+function clear(){revision++;if(url)URL.revokeObjectURL(url);url=null;$('qr-preview').replaceChildren();$('qr-empty').hidden=false;$('qr-download').hidden=true;$('qr-download').removeAttribute('href');setText($('qr-status'),'');}
 for(const id of ['qr-text','qr-color','qr-logo'])$(id).addEventListener('input',clear);
 $('qr-remove-logo').onclick=()=>{$('qr-logo').value='';clear();};
 $('qr-generate').onclick=async()=>{
@@ -16,14 +16,14 @@ $('qr-generate').onclick=async()=>{
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
     if(job!==revision)return;
     if(!blob)throw new Error('Could not read this image.');
-    $('qr-preview').append(canvas);url=URL.createObjectURL(blob);$('qr-download').href=url;$('qr-download').hidden=false;
+    $('qr-preview').append(canvas);$('qr-empty').hidden=true;url=URL.createObjectURL(blob);$('qr-download').href=url;$('qr-download').hidden=false;
     setText($('qr-status'),'QR verified. Test with your phone before printing.');
   }catch(error){if(job===revision)setText($('qr-status'),error.message);}
   finally{$('qr-generate').disabled=false;}
 };
 let frameTimer;
 function refreshFrame(){clear();clearTimeout(frameTimer);const render=()=>{if(!$('qr-text').value.trim())return;if($('qr-generate').disabled){frameTimer=setTimeout(render,100);return;}$('qr-generate').click();};frameTimer=setTimeout(render,180);}
-for(const button of document.querySelectorAll('[data-frame]'))button.onclick=()=>{selectedFrame=button.dataset.frame;for(const b of document.querySelectorAll('[data-frame]'))b.setAttribute('aria-pressed',String(b===button));for(const id of ['qr-frame-title','qr-frame-description'])$(id).disabled=selectedFrame==='none';refreshFrame();};
+for(const button of document.querySelectorAll('[data-frame]'))button.onclick=()=>{selectedFrame=button.dataset.frame;document.querySelector('.qr-caption-fields').hidden=selectedFrame==='none';$('qr-caption-hint').hidden=selectedFrame!=='none';for(const b of document.querySelectorAll('[data-frame]'))b.setAttribute('aria-pressed',String(b===button));for(const id of ['qr-frame-title','qr-frame-description'])$(id).disabled=selectedFrame==='none';refreshFrame();};
 let expanded=false;$('qr-more-frames').onclick=()=>{expanded=!expanded;$('qr-more-frames').setAttribute('aria-expanded',String(expanded));document.querySelectorAll('[data-frame]').forEach((b,i)=>{if(i>=5)b.hidden=!expanded;});setText($('qr-more-label'),expanded?'Fewer frames':'More frames');};
 for(const id of ['qr-frame-title','qr-frame-description'])$(id).oninput=refreshFrame;
 // Thumbnails use a sample QR; the final preview always uses the user's content.
