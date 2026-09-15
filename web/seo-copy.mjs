@@ -31,6 +31,8 @@ export const seoRows=[
 ['Keep aspect ratio enabled and change either width or height; the other dimension follows automatically. The resized file is saved as PNG. Increasing dimensions does not restore detail missing from the source.','비율 유지를 켜고 가로 또는 세로 중 하나를 바꾸면 나머지 값이 자동으로 맞춰집니다. 결과는 PNG로 저장됩니다. 크기를 늘려도 원본에 없는 정보는 복원되지 않습니다.','縦横比を維持したまま幅か高さを変更すると、もう一方が自動で調整されます。結果はPNG保存です。拡大しても元の画像にない細部は復元できません。','开启保持宽高比，修改宽度或高度，另一个尺寸会自动调整。结果保存为PNG。放大无法恢复源图中缺失的细节。']
 ];
 export function faqsFor(t){
+ if(['pdfedit','heic'].includes(t.type))return [];
+ if(t.slug==='wifi-qr')return [10];
  if(t.slug==='merge-pdf')return [7];
  if(t.slug==='qr-generator')return [10];
  if(t.slug==='qr-reader')return [11];

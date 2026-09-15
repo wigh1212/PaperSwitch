@@ -1,17 +1,21 @@
+import {wifiPayload} from './services/wifi-service.js';
 import {frameRows} from './qr-frame-copy.js';
 import {frameQR,frames} from './services/qr-frame-service.js';
 registerTranslations(frameRows);
 import {initLanguages,setText,registerTranslations} from './i18n.js';
 import {generateQR,decodeQR} from './services/qr-service.js';
 const $=id=>document.getElementById(id);
+const wifi=document.body.dataset.tool==='wifi-qr';
+const content=()=>wifi?wifiPayload({ssid:$('wifi-ssid').value,password:$('wifi-password').value,security:$('wifi-security').value,hidden:$('wifi-hidden').checked}):$('qr-text').value;
 let url=null,revision=0,selectedFrame='none';
 function clear(){revision++;if(url)URL.revokeObjectURL(url);url=null;$('qr-preview').replaceChildren();$('qr-empty').hidden=false;$('qr-download').hidden=true;$('qr-download').removeAttribute('href');setText($('qr-status'),'');}
 for(const id of ['qr-text','qr-color','qr-logo'])$(id).addEventListener('input',clear);
+for(const id of ['wifi-ssid','wifi-password','wifi-security','wifi-hidden'])$(id).addEventListener('input',()=>{if(id==='wifi-security')$('wifi-password').disabled=$('wifi-security').value==='nopass';clear();});
 $('qr-remove-logo').onclick=()=>{$('qr-logo').value='';clear();};
 $('qr-generate').onclick=async()=>{
   clear();const job=revision;$('qr-generate').disabled=true;
   try{
-    const raw=await generateQR($('qr-text').value,{color:$('qr-color').value,logo:$('qr-logo').files[0]});
+    const raw=await generateQR(content(),{color:$('qr-color').value,logo:$('qr-logo').files[0]});
     const canvas=frameQR(raw,{frame:selectedFrame,title:$('qr-frame-title').value,description:$('qr-frame-description').value});
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
     if(job!==revision)return;
@@ -22,7 +26,7 @@ $('qr-generate').onclick=async()=>{
   finally{$('qr-generate').disabled=false;}
 };
 let frameTimer;
-function refreshFrame(){clear();clearTimeout(frameTimer);const render=()=>{if(!$('qr-text').value.trim())return;if($('qr-generate').disabled){frameTimer=setTimeout(render,100);return;}$('qr-generate').click();};frameTimer=setTimeout(render,180);}
+function refreshFrame(){clear();clearTimeout(frameTimer);const render=()=>{if(!(wifi?$('wifi-ssid').value:$('qr-text').value).trim())return;if($('qr-generate').disabled){frameTimer=setTimeout(render,100);return;}$('qr-generate').click();};frameTimer=setTimeout(render,180);}
 for(const button of document.querySelectorAll('[data-frame]'))button.onclick=()=>{selectedFrame=button.dataset.frame;document.querySelector('.qr-caption-fields').hidden=selectedFrame==='none';$('qr-caption-hint').hidden=selectedFrame!=='none';for(const b of document.querySelectorAll('[data-frame]'))b.setAttribute('aria-pressed',String(b===button));for(const id of ['qr-frame-title','qr-frame-description'])$(id).disabled=selectedFrame==='none';refreshFrame();};
 let expanded=false;$('qr-more-frames').onclick=()=>{expanded=!expanded;$('qr-more-frames').setAttribute('aria-expanded',String(expanded));document.querySelectorAll('[data-frame]').forEach((b,i)=>{if(i>=5)b.hidden=!expanded;});setText($('qr-more-label'),expanded?'Fewer frames':'More frames');};
 for(const id of ['qr-frame-title','qr-frame-description'])$(id).oninput=refreshFrame;

@@ -3,7 +3,12 @@ import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
 await cp('web/ads.txt',out+'/ads.txt');
+await cp('web/growth-copy.mjs',out+'/growth-copy.js');
 await mkdir(out+'/assets',{recursive:true});
+for(const f of ['file-tools.js','pdf-edit-worker.js','heic-worker.js'])await cp('web/'+f,out+'/assets/'+f);
+await mkdir(out+'/assets/vendor',{recursive:true});
+await cp('node_modules/heic-to/dist/next/heic-to.js',out+'/assets/vendor/heic-to.js');
+await cp('node_modules/heic-to/LICENSE',out+'/assets/vendor/heic-to-LICENSE');
 await cp('web/image-compressor.js',out+'/assets/image-compressor.js');
 await cp('web/compressor-copy.mjs',out+'/compressor-copy.js');
 await cp('extension',out+'/assets',{recursive:true,filter:path=>!path.endsWith('manifest.json')&&!path.endsWith('background.js')});
@@ -11,7 +16,7 @@ for(const file of ['site.css','site.js','copy.mjs'])await cp('web/'+file,out+'/'
 const menuLabel=t=>t.slug.includes('-to-')?label(t.input)+' → '+label(t.output):escape(t.title);
 const link=t=>'<a href="/'+t.slug+'">'+menuLabel(t)+'</a>';
 const logo='<a class="brand" href="/" translate="no" aria-label="Paper Switch"><img src="/favicon.svg" width="34" height="34" alt=""><span>Paper Switch</span></a>';
-const menu='<nav class="format-nav" aria-label="Main navigation">'+formats.map(f=>'<details class="format-menu"><summary>'+label(f)+'</summary><div class="dropdown">'+tools.filter(t=>t.input===f).map(link).join('')+'</div></details>').join('')+'<details class="format-menu"><summary>Tools</summary><div class="dropdown">'+tools.filter(t=>t.type!=='convert').map(link).join('')+'</div></details></nav>';
+const menu='<nav class="format-nav" aria-label="Main navigation">'+formats.map(f=>'<details class="format-menu"><summary>'+label(f)+'</summary><div class="dropdown">'+tools.filter(t=>t.input===f).map(link).join('')+'</div></details>').join('')+'<details class="format-menu"><summary>Tools</summary><div class="dropdown">'+tools.filter(t=>!t.input).map(link).join('')+'</div></details></nav>';
 const header='<header class="site-header">'+logo+menu+'<label class="language-control"><span class="sr-only">Language</span><select id="language" aria-label="Language"><option value="en">English</option><option value="ko">한국어</option><option value="ja">日本語</option><option value="zh-CN">简体中文</option></select></label></header>';
 const footer='<footer class="site-footer"><span translate="no">Paper Switch</span><nav><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a></nav><small translate="no">MuPDF · AGPL-3.0-or-later</small></footer>';
 const adSenseScript="<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6110796878581495\" crossorigin=\"anonymous\"></script>";
@@ -19,26 +24,28 @@ const meta=(title,description,ads=true)=>'<meta name="google-site-verification" 
 const shell=(title,description,body,ads=true)=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+escape(title)+' | Paper Switch</title><link rel="stylesheet" href="/assets/style.css">'+meta(title,description,ads)+'</head><body>'+header+'<main><h1>'+escape(title)+'</h1><p class="intro">'+escape(description)+'</p>'+body+'</main>'+footer+'<script type="module" src="/site.js"></script></body></html>';
 const tabs='<div class="format-tabs" role="tablist" aria-label="Source format">'+formats.map((f,i)=>'<button type="button" role="tab" id="choose-'+f+'" aria-controls="group-'+f+'" aria-selected="'+!i+'" tabindex="'+(i?-1:0)+'" data-source="'+f+'">'+label(f)+'</button>').join('')+'</div>';
 const groups=formats.map((f,i)=>'<section class="format-group" id="group-'+f+'" role="tabpanel" aria-labelledby="choose-'+f+'"'+(i?' hidden':'')+'><h2>Convert from '+label(f)+'</h2><div class="conversion-list">'+tools.filter(t=>t.input===f).map(t=>'<a class="conversion-link" href="/'+t.slug+'"><span>'+menuLabel(t)+'</span><span aria-hidden="true">↗</span></a>').join('')+'</div></section>').join('');
-const utilities='<section class="utilities-strip"><h2>More tools</h2><div>'+tools.filter(t=>t.type!=='convert').map(link).join('')+'</div></section>';
+const utilities='<section class="utilities-strip"><h2>More tools</h2><div>'+tools.filter(t=>!t.input).map(link).join('')+'</div></section>';
 await writeFile(out+'/index.html',shell('Convert a file. Keep creating.','Choose your file format to get started.','<section class="tool-picker">'+tabs+groups+'</section>'+utilities+'<p class="privacy-line">No uploads. No account needed.</p>'));
 for(const t of tools){
- const engine=t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
- let html=await readFile((t.type==='compressor'?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
+ const engine=['heic','pdfedit'].includes(t.type)?'file-tools':t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
+ let html=await readFile((['compressor','heic','pdfedit'].includes(t.type)?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
  html=html.replace(/<title>[\s\S]*?<\/title>/,'<title>'+escape(t.title)+' | Paper Switch</title>');
  html=html.replace('<head>','<head><base href="/assets/">').replace('</head>',meta(t.title,t.description)+'</head>');
  html=html.replace('<body>','<body class="dedicated" data-engine="'+engine+'" data-tool="'+t.slug+'"'+(t.mode?' data-tool-mode="'+t.mode+'"':'')+'>');
  html=html.replace(/<header>[\s\S]*?<\/header>/,header);
  html=html.replace(/<h1>[\s\S]*?<\/h1>/,'<h1>'+escape(t.title)+'</h1>').replace(/<p class="intro">[\s\S]*?<\/p>/,'<p class="intro">'+escape(t.description)+'</p>');
  html=html.replace('<main>','<main><nav class="breadcrumbs"><a href="/">All tools</a><span aria-hidden="true">/</span><span>'+escape(t.title)+'</span></nav>');
- if(t.slug==='qr-generator')html=html.replace('id="read"','id="read" hidden');
+ if(t.slug==='qr-generator'||t.slug==='wifi-qr')html=html.replace('id="read"','id="read" hidden');
+ if(t.slug==='wifi-qr'){html=html.replace('Enter a link or text to get started.','Enter a network name and password, or choose an open network.').replace('id="wifi-fields" hidden','id="wifi-fields"').replace('id="qr-text-fields"','id="qr-text-fields" hidden');}
+ if(t.type==='heic'){html=html.replace('Choose PDF','Choose HEIC photos').replace('accept=".pdf"','accept=".heic,.heif" multiple').replace('id="ft-pdf"','id="ft-pdf" hidden').replace('PDF: up to 50 MB and 100 pages. Password-protected files are not supported.',t.note);}
  if(t.slug==='qr-reader')html=html.replace('id="create"','id="create" hidden');
  if(t.type==='image'){
   html=html.replace('<div class="qr-settings"><label><input id="image-remove"','<div class="qr-settings" hidden><label><input id="image-remove"');
   html=html.replace(/<p>Click the original image[\s\S]*?<\/p><p>For solid backgrounds[\s\S]*?<\/p>/,'');
  }
- const steps=t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
+ const steps=['pdfedit','heic'].includes(t.type)?[t.description]:t.slug==='wifi-qr'?[t.description]:t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
  :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.'];
- const related=tools.filter(x=>x.slug!==t.slug&&(t.type==='convert'?(x.slug==='image-compressor'||x.input===t.input||(x.input===t.output&&x.output===t.input)||x.slug==='pdf-to-txt'):x.type!=='convert')).slice(0,4);
+ const related=tools.filter(x=>x.slug!==t.slug&&(t.input?(x.input===t.input||x.slug==='image-compressor'||x.slug==='merge-pdf'):(x.type==='qr'||x.slug==='image-resizer'))).slice(0,4);
  html=html.replace('</main>','<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Related tools</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
