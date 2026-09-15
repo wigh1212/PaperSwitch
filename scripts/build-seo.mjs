@@ -1,3 +1,5 @@
+import {frameRows} from '../extension/qr-frame-copy.js';
+import {compressorRows} from '../web/compressor-copy.mjs';
 import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import {dirname} from 'node:path';
 import {parse,parseFragment,serialize} from 'parse5';
@@ -8,7 +10,7 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
 const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;

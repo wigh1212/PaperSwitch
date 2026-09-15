@@ -3,6 +3,9 @@ import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
 await cp('web/ads.txt',out+'/ads.txt');
+await mkdir(out+'/assets',{recursive:true});
+await cp('web/image-compressor.js',out+'/assets/image-compressor.js');
+await cp('web/compressor-copy.mjs',out+'/compressor-copy.js');
 await cp('extension',out+'/assets',{recursive:true,filter:path=>!path.endsWith('manifest.json')&&!path.endsWith('background.js')});
 for(const file of ['site.css','site.js','copy.mjs'])await cp('web/'+file,out+'/'+(file==='copy.mjs'?'copy.js':file));
 const menuLabel=t=>t.slug.includes('-to-')?label(t.input)+' → '+label(t.output):escape(t.title);
@@ -19,8 +22,8 @@ const groups=formats.map((f,i)=>'<section class="format-group" id="group-'+f+'" 
 const utilities='<section class="utilities-strip"><h2>More tools</h2><div>'+tools.filter(t=>t.type!=='convert').map(link).join('')+'</div></section>';
 await writeFile(out+'/index.html',shell('Convert a file. Keep creating.','Choose your file format to get started.','<section class="tool-picker">'+tabs+groups+'</section>'+utilities+'<p class="privacy-line">No uploads. No account needed.</p>'));
 for(const t of tools){
- const engine=t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
- let html=await readFile('extension/'+(engine==='app'?'index':engine)+'.html','utf8');
+ const engine=t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
+ let html=await readFile((t.type==='compressor'?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
  html=html.replace(/<title>[\s\S]*?<\/title>/,'<title>'+escape(t.title)+' | Paper Switch</title>');
  html=html.replace('<head>','<head><base href="/assets/">').replace('</head>',meta(t.title,t.description)+'</head>');
  html=html.replace('<body>','<body class="dedicated" data-engine="'+engine+'" data-tool="'+t.slug+'"'+(t.mode?' data-tool-mode="'+t.mode+'"':'')+'>');
@@ -33,9 +36,9 @@ for(const t of tools){
   html=html.replace('<div class="qr-settings"><label><input id="image-remove"','<div class="qr-settings" hidden><label><input id="image-remove"');
   html=html.replace(/<p>Click the original image[\s\S]*?<\/p><p>For solid backgrounds[\s\S]*?<\/p>/,'');
  }
- const steps=t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
+ const steps=t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
  :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.'];
- const related=tools.filter(x=>x.slug!==t.slug&&(t.type==='convert'?(x.input===t.input||(x.input===t.output&&x.output===t.input)||x.slug==='pdf-to-txt'):x.type!=='convert')).slice(0,4);
+ const related=tools.filter(x=>x.slug!==t.slug&&(t.type==='convert'?(x.slug==='image-compressor'||x.input===t.input||(x.input===t.output&&x.output===t.input)||x.slug==='pdf-to-txt'):x.type!=='convert')).slice(0,4);
  html=html.replace('</main>','<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Related tools</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');

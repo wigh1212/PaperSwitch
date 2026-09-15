@@ -32,7 +32,7 @@ for(const route of routes){
  const schema=JSON.parse(text(find(n=>attr(n,'id')==='seo-structured')));assert.equal(schema['@context'],'https://schema.org');
  const response=await fetch(origin+route.path);assert.equal(response.status,200,route.path);assert(response.headers.get('content-type').includes('text/html'));
 }
-const sitemap=await(await fetch(origin+'/sitemap.xml')).text();assert.equal((sitemap.match(/<loc>/g)||[]).length,160);
+const sitemap=await(await fetch(origin+'/sitemap.xml')).text();assert.equal((sitemap.match(/<loc>/g)||[]).length,routes.length);
 for(const route of routes)assert(sitemap.includes('<loc>'+SITE_ORIGIN+route.path+'</loc>'));
 const robots=await(await fetch(origin+'/robots.txt')).text();assert(!robots.includes('Disallow: /assets'));assert(robots.includes(SITE_ORIGIN+'/sitemap.xml'));
 const ads=await(await fetch(origin+'/ads.txt')).text();assert(ads.includes('pub-6110796878581495'));

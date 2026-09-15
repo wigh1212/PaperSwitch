@@ -3,3 +3,5 @@
 html:lang(ko) .conversion-link,html:lang(ko) .intro,html:lang(ko) .guide{word-break:keep-all}.conversion-link>span:first-child{white-space:nowrap}
 
 .site-footer .language-links{flex-basis:100%;margin-left:0;font-size:13px}.faq h3{font-size:16px;line-height:1.65;margin:22px 0 8px}.faq{margin-top:24px}
+
+#compress-controls{display:grid;gap:12px;min-width:0;border:0;padding:20px 0}#compress-controls input[type=number],#compress-controls select{width:100%;max-width:300px;padding:10px}#compress-file{max-width:100%}#compress-result img{display:block;width:100%;height:auto}#compress-download{display:inline-block}

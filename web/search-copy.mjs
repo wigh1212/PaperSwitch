@@ -1,5 +1,7 @@
+import {compressorRows} from './compressor-copy.mjs';
 // Four columns: English, Korean, Japanese, Simplified Chinese.
 export function searchCopy(t){
+ if(t.slug==='image-compressor')return {title:compressorRows[16],description:compressorRows[1],use:compressorRows[17],how:compressorRows[9]};
  const a=t.input?.toUpperCase(),b=t.output?.toUpperCase();
  let title,description,use;
  if(t.slug.includes('-to-')){
