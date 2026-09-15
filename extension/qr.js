@@ -11,6 +11,10 @@ let url=null,revision=0,selectedFrame='none';
 function clear(){revision++;if(url)URL.revokeObjectURL(url);url=null;$('qr-preview').replaceChildren();$('qr-empty').hidden=false;$('qr-download').hidden=true;$('qr-download').removeAttribute('href');setText($('qr-status'),'');}
 for(const id of ['qr-text','qr-color','qr-logo'])$(id).addEventListener('input',clear);
 for(const id of ['wifi-ssid','wifi-password','wifi-security','wifi-hidden'])$(id).addEventListener('input',()=>{if(id==='wifi-security')$('wifi-password').disabled=$('wifi-security').value==='nopass';clear();});
+$('wifi-show-password').onchange=()=>{$('wifi-password').type=$('wifi-show-password').checked?'text':'password';};
+const exampleAvailable=()=>{$('wifi-example').disabled=Boolean($('wifi-ssid').value||$('wifi-password').value);};
+for(const id of ['wifi-ssid','wifi-password'])$(id).addEventListener('input',exampleAvailable);
+$('wifi-example').onclick=()=>{if($('wifi-ssid').value||$('wifi-password').value)return;$('wifi-ssid').value='iptime';$('wifi-password').value='coffee2026!';$('wifi-security').value='WPA';$('wifi-password').disabled=false;$('wifi-hidden').checked=false;exampleAvailable();clear();$('wifi-ssid').focus();};
 $('qr-remove-logo').onclick=()=>{$('qr-logo').value='';clear();};
 $('qr-generate').onclick=async()=>{
   clear();const job=revision;$('qr-generate').disabled=true;
