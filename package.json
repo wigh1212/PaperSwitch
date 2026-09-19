@@ -16,7 +16,8 @@
     "test:web:locales": "node tests/web-locales.mjs",
     "test:web:routing": "node tests/web-routing.mjs",
     "test:web:seo": "node tests/web-seo.mjs",
-    "test:web:growth": "node tests/web-growth.mjs"
+    "test:web:growth": "node tests/web-growth.mjs",
+    "test:web:ui-seo": "node tests/web-ui-seo.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",

@@ -1,3 +1,4 @@
+import {uxRows,extraFaqs} from '../web/ux-copy.mjs';
 import {growthRows} from '../web/growth-copy.mjs';
 import {frameRows} from '../extension/qr-frame-copy.js';
 import {compressorRows} from '../web/compressor-copy.mjs';
@@ -11,7 +12,7 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
 const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
@@ -47,7 +48,9 @@ for(const base of routes){
    set(find(doc,n=>attr(n,'property')==='og:title'),'content',copy.title[0]);
    text(find(doc,n=>(attr(n,'class')||'').split(' ').includes('intro')),copy.description[0]);
    const guide=find(doc,n=>(attr(n,'class')||'').split(' ').includes('guide'));
-   if(guide){text(find(guide,n=>n.tagName==='h2'),copy.how[0]);append(guide,'<p>'+esc(copy.use[0])+'</p>');}
+   if(guide){text(find(guide,n=>n.tagName==='h2'),copy.how[0]);if(copy.use[0]!==copy.description[0])append(guide,'<p>'+esc(copy.use[0])+'</p>');}
+   const extras=extraFaqs(tool);
+   if(guide&&extras.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+extras.map(([q,a])=>'<h3>'+esc(uxRows[q][0])+'</h3><p>'+esc(uxRows[a][0])+'</p>').join('')+'</section>');
    const faqs=faqsFor(tool);
    if(guide&&faqs.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+faqs.map(i=>'<h3>'+esc(faqPairs[i][0])+'</h3><p>'+esc(faqPairs[i][1])+'</p>').join('')+'</section>');
    if(tool.type==='convert'){
@@ -86,8 +89,6 @@ for(const base of routes){
   const file=localizedFile(base,language);await mkdir(dirname(file),{recursive:true});await writeFile(file,serialize(doc));
  }
 }
-const entries=routes.flatMap(base=>locales.map(l=>({base,language:l.language,path:localizedPath(base,l.language)})));
-const sitemap='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+entries.map(e=>'<url><loc>'+SITE_ORIGIN+e.path+'</loc>'+locales.map(l=>'<xhtml:link rel="alternate" hreflang="'+l.language+'" href="'+SITE_ORIGIN+localizedPath(e.base,l.language)+'"/>').join('')+'<xhtml:link rel="alternate" hreflang="x-default" href="'+SITE_ORIGIN+e.base+'"/></url>').join('')+'</urlset>';
-await writeFile('dist/sitemap.xml',sitemap);
-await writeFile('dist/robots.txt','User-agent: *\nAllow: /\nSitemap: '+SITE_ORIGIN+'/sitemap.xml\n');
-console.log('SEO: '+entries.length+' static language pages, canonical URLs, hreflang, sitemap and crawlable resources.');
+const {buildSitemaps}=await import('./sitemaps.mjs');
+const count=await buildSitemaps(routes);
+console.log('SEO: '+count+' validated pages; aggregate sitemap and four language sitemaps.');

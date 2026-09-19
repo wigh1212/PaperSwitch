@@ -1,7 +1,9 @@
+import {uxRows,guideSteps} from '../web/ux-copy.mjs';
 import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
+await cp('web/ux-copy.mjs',out+'/ux-copy.js');
 await cp('web/ads.txt',out+'/ads.txt');
 await cp('web/growth-copy.mjs',out+'/growth-copy.js');
 await mkdir(out+'/assets',{recursive:true});
@@ -25,7 +27,11 @@ const shell=(title,description,body,ads=true)=>'<!doctype html><html lang="en"><
 const tabs='<div class="format-tabs" role="tablist" aria-label="Source format">'+formats.map((f,i)=>'<button type="button" role="tab" id="choose-'+f+'" aria-controls="group-'+f+'" aria-selected="'+!i+'" tabindex="'+(i?-1:0)+'" data-source="'+f+'">'+label(f)+'</button>').join('')+'</div>';
 const groups=formats.map((f,i)=>'<section class="format-group" id="group-'+f+'" role="tabpanel" aria-labelledby="choose-'+f+'"'+(i?' hidden':'')+'><h2>Convert from '+label(f)+'</h2><div class="conversion-list">'+tools.filter(t=>t.input===f).map(t=>'<a class="conversion-link" href="/'+t.slug+'"><span>'+menuLabel(t)+'</span><span aria-hidden="true">↗</span></a>').join('')+'</div></section>').join('');
 const utilities='<section class="utilities-strip"><h2>More tools</h2><div>'+tools.filter(t=>!t.input).map(link).join('')+'</div></section>';
-await writeFile(out+'/index.html',shell('Convert a file. Keep creating.','Choose your file format to get started.','<section class="tool-picker">'+tabs+groups+'</section>'+utilities+'<p class="privacy-line">No uploads. No account needed.</p>'));
+const quick=[['jpg-to-pdf',6,'JPG → PDF'],['pdf-to-jpg',7,'PDF → JPG'],['image-compressor',8,'KB ↓'],['merge-pdf',9,'PDF + PDF'],['heic-to-jpg',10,'HEIC → JPG'],['qr-generator',11,'QR']];
+const quickHtml='<div class="home-trust"><span>'+uxRows[4][0]+'</span><span>'+uxRows[5][0]+'</span></div><section class="quick-tools" aria-label="'+uxRows[1][0]+'">'+quick.map(([slug,index,badge])=>'<a class="quick-card" href="/'+slug+'"><span class="quick-icon" aria-hidden="true">'+badge+'</span><h2>'+uxRows[index][0]+'</h2><span class="quick-name">'+escape(tools.find(t=>t.slug===slug).title)+'</span><span class="quick-arrow" aria-hidden="true">↗</span></a>').join('')+'</section>';
+const browse='<details class="browse-tools"><summary>'+uxRows[3][0]+'</summary><section class="tool-picker">'+tabs+groups+'</section>'+utilities+'</details>';
+const help='<section class="home-help"><h2>'+uxRows[12][0]+'</h2><div><article><p>'+uxRows[13][0]+'</p><a href="/heic-to-jpg">HEIC → JPG</a> · <a href="/image-compressor">Image Compressor</a></article><article><p>'+uxRows[14][0]+'</p><a href="/extract-pdf-pages">Extract PDF pages</a></article></div></section>';
+await writeFile(out+'/index.html',shell(uxRows[1][0],uxRows[2][0],quickHtml+browse+help));
 for(const t of tools){
  const engine=['heic','pdfedit'].includes(t.type)?'file-tools':t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
  let html=await readFile((['compressor','heic','pdfedit'].includes(t.type)?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
@@ -43,10 +49,12 @@ for(const t of tools){
   html=html.replace('<div class="qr-settings"><label><input id="image-remove"','<div class="qr-settings" hidden><label><input id="image-remove"');
   html=html.replace(/<p>Click the original image[\s\S]*?<\/p><p>For solid backgrounds[\s\S]*?<\/p>/,'');
  }
- const steps=['pdfedit','heic'].includes(t.type)?[t.description]:t.slug==='wifi-qr'?[t.description]:t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
+ const steps=guideSteps(t)||t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
  :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.'];
- const related=tools.filter(x=>x.slug!==t.slug&&(t.input?(x.input===t.input||x.slug==='image-compressor'||x.slug==='merge-pdf'):(x.type==='qr'||x.slug==='image-resizer'))).slice(0,4);
- html=html.replace('</main>','<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Related tools</h2><div>'+related.map(link).join('')+'</div></section></main>');
+ const preferred=t.type==='heic'?['image-compressor','jpg-to-pdf','image-resizer']:t.type==='pdfedit'?['merge-pdf','extract-pdf-pages','split-pdf','rotate-pdf']:t.type==='qr'?['wifi-qr','qr-generator','qr-reader']:t.slug==='image-compressor'?['image-resizer','jpg-to-pdf','heic-to-jpg']:[];
+ const reverse=tools.find(x=>t.input&&x.input===t.output&&x.output===t.input&&x.slug!==t.slug);
+ const related=[...new Set([...preferred,...(reverse?[reverse.slug]:[]),...tools.filter(x=>t.input&&x.input===t.input).map(x=>x.slug),'image-compressor','image-resizer'])].filter(slug=>slug!==t.slug).slice(0,4).map(slug=>tools.find(t=>t.slug===slug));
+ html=html.replace('</main>','<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
  html=html.replace(/<script type="module" src="[^"]+"><\/script>/,'<script type="module" src="/site.js"></script>');

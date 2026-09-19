@@ -1,3 +1,4 @@
+import {uxRows} from '/ux-copy.js';
 import {growthRows} from '/growth-copy.js';
 import {compressorRows} from '/compressor-copy.js';
 import {SITE_ORIGIN,localizedPath,splitPath,structuredData} from '/seo-config.js';
@@ -5,7 +6,7 @@ import {seoRows} from '/seo-copy.js';
 import {searchRows} from '/search-copy.js';
 import {initLanguages,registerTranslations,setLanguage} from '/assets/i18n.js';
 import {rows} from '/copy.js';
-registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(rows);
+registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
 registerTranslations(seoRows);
 registerTranslations(searchRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);
