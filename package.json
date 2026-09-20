@@ -19,7 +19,8 @@
     "test:web:growth": "node tests/web-growth.mjs",
     "test:web:ui-seo": "node tests/web-ui-seo.mjs",
     "test:web:gif": "node tests/web-gif.mjs",
-    "test:web:html-pdf": "node tests/web-html-pdf.mjs"
+    "test:web:html-pdf": "node tests/web-html-pdf.mjs",
+    "test:web:pdf-compress": "node tests/web-pdf-compress.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",

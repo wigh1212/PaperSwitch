@@ -1,9 +1,11 @@
+import {pdfCompressRows} from './pdf-compress-copy.mjs';
 import {htmlRows} from './html-copy.mjs';
 import {gifRows} from './gif-copy.mjs';
 import {growthEntries} from './growth-copy.mjs';
 import {compressorRows} from './compressor-copy.mjs';
 // Four columns: English, Korean, Japanese, Simplified Chinese.
 export function searchCopy(t){
+ if(t.type==="pdfcompress")return {title:pdfCompressRows[0],description:pdfCompressRows[1],use:pdfCompressRows[28],how:["How it works","사용 방법","使い方","使用方法"]};
  if(t.type==="html")return {title:htmlRows[0],description:htmlRows[1],use:htmlRows[26],how:["How it works","사용 방법","使い方","使用方法"]};
  if(t.type==="gif")return {title:gifRows[0],description:gifRows[1],use:gifRows[30],how:["How it works","사용 방법","使い方","使用方法"]};
  if(t.slug==='image-compressor')return {title:compressorRows[16],description:compressorRows[1],use:compressorRows[17],how:compressorRows[9]};

@@ -1,3 +1,4 @@
+import {pdfCompressRows} from '../web/pdf-compress-copy.mjs';
 import {htmlRows} from '../web/html-copy.mjs';
 import {gifRows} from '../web/gif-copy.mjs';
 import {uxRows,extraFaqs} from '../web/ux-copy.mjs';
@@ -14,7 +15,7 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
 const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
