@@ -6,10 +6,10 @@ export const htmlRows=[
     "HTML转PDF – 免费保存HTML为PDF"
   ],
   [
-    "Open an HTML file or paste HTML, preview the document and save it as PDF using your browser’s print dialog. Files stay in your browser.",
-    "HTML 파일을 열거나 코드를 붙여넣고 미리본 뒤 브라우저 인쇄 화면에서 PDF로 저장하세요. 파일은 브라우저에서 처리합니다.",
-    "HTMLファイルまたはコードをプレビューし、ブラウザーの印刷画面でPDF保存。ファイルはブラウザー内で処理します。",
-    "打开HTML文件或粘贴代码，预览后通过浏览器打印对话框保存为PDF。文件在浏览器内处理。"
+    "Open an HTML file or paste HTML, preview it and download a PDF containing only your HTML content.",
+    "HTML 파일을 열거나 코드를 붙여넣고 미리본 뒤 HTML 내용만 담긴 PDF를 다운로드하세요.",
+    "HTMLファイルまたはコードをプレビューし、HTMLの内容だけをPDFでダウンロードできます。",
+    "打开HTML文件或粘贴代码，预览后下载仅包含HTML内容的PDF。"
   ],
   [
     "UTF-8 HTML up to 2 MB. Scripts, external images, stylesheets and fonts are not loaded. Embedded PNG, JPG and WEBP images are supported.",
@@ -78,10 +78,10 @@ export const htmlRows=[
     "更新预览"
   ],
   [
-    "Save as PDF (print)",
-    "PDF로 저장 (인쇄)",
-    "PDF保存（印刷）",
-    "保存为PDF（打印）"
+    "Download PDF",
+    "PDF 다운로드",
+    "PDFをダウンロード",
+    "下载PDF"
   ],
   [
     "Document preview",
@@ -90,10 +90,10 @@ export const htmlRows=[
     "文档预览"
   ],
   [
-    "Choose “Save as PDF” in the print dialog. Check paper size and margins there; turn off headers and footers if unwanted.",
-    "인쇄 화면에서 ‘PDF로 저장’을 선택하세요. 용지와 여백을 확인하고, 필요하지 않으면 머리글과 바닥글을 꺼 주세요.",
-    "印刷画面で「PDFに保存」を選択。用紙と余白を確認し、不要なヘッダー・フッターをオフにしてください。",
-    "在打印对话框中选择“另存为PDF”。检查纸张和页边距，不需要时关闭页眉页脚。"
+    "Only your HTML content is saved. No browser date, page title, website address or page numbers are added.",
+    "HTML 내용만 저장합니다. 브라우저의 날짜·페이지 제목·사이트 주소·페이지 번호를 추가하지 않습니다.",
+    "HTMLの内容だけを保存します。ブラウザーの日付・ページタイトル・URL・ページ番号は追加しません。",
+    "仅保存HTML内容，不添加浏览器日期、页面标题、网址或页码。"
   ],
   [
     "Paste HTML or choose a file, then update the preview.",
@@ -102,10 +102,10 @@ export const htmlRows=[
     "粘贴HTML或选择文件，然后更新预览。"
   ],
   [
-    "Preview is ready. You can now save as PDF.",
-    "미리보기가 준비됐습니다. PDF로 저장할 수 있습니다.",
-    "プレビューの準備ができました。PDF保存できます。",
-    "预览已就绪，可以保存为PDF。"
+    "Preview is ready. You can now download the PDF.",
+    "미리보기가 준비됐습니다. PDF를 다운로드할 수 있습니다.",
+    "プレビューの準備ができました。PDFをダウンロードできます。",
+    "预览已就绪，可以下载PDF。"
   ],
   [
     "The content changed. Update the preview before saving.",
@@ -132,10 +132,10 @@ export const htmlRows=[
     "为什么PDF与网站外观不同？"
   ],
   [
-    "This tool converts static HTML, not a website URL. Inline CSS is retained, but scripts and external resources are excluded. Page breaks and print backgrounds depend on your browser settings.",
-    "이 도구는 웹사이트 주소가 아닌 정적인 HTML을 처리합니다. 내부 CSS는 유지하지만 스크립트와 외부 리소스는 제외합니다. 페이지 나눔과 배경 인쇄는 브라우저 설정에 따라 달라집니다.",
-    "URLではなく静的HTMLを処理します。内部CSSは保持しますが、スクリプトと外部リソースは除外します。改ページと背景印刷はブラウザー設定に依存します。",
-    "此工具处理静态HTML而非网站网址。保留内部CSS，但排除脚本及外部资源。分页和背景打印取决于浏览器设置。"
+    "This tool converts static HTML, not a website URL. Scripts and external resources are excluded. The rendered content is saved as images in the PDF; text is not selectable. Complex CSS may render differently and long content is split across pages.",
+    "웹사이트 주소가 아닌 정적인 HTML을 처리합니다. 스크립트와 외부 리소스는 제외합니다. 화면을 이미지로 담은 PDF이므로 텍스트를 선택할 수 없습니다. 복잡한 CSS는 다르게 표시될 수 있으며 긴 내용은 페이지로 나눕니다.",
+    "URLではなく静的HTMLを処理します。スクリプトと外部リソースは除外します。描画結果を画像としてPDFに保存するため文字は選択できません。複雑なCSSの見た目が変わる場合があり、長い内容は複数ページに分割します。",
+    "处理静态HTML而非网址，排除脚本及外部资源。渲染结果以图片保存到PDF，文字不可选择。复杂CSS可能显示不同，较长内容会分成多页。"
   ],
   [
     "Open an HTML file or paste the HTML code.",
@@ -150,21 +150,33 @@ export const htmlRows=[
     "选择页面设置并检查文档预览。"
   ],
   [
-    "Open the print dialog and choose Save as PDF.",
-    "인쇄 화면을 열고 PDF로 저장을 선택하세요.",
-    "印刷画面を開いてPDF保存を選びます。",
-    "打开打印对话框并选择另存为PDF。"
+    "Download the PDF containing your HTML content.",
+    "HTML 내용이 담긴 PDF를 다운로드하세요.",
+    "HTMLの内容をPDFでダウンロードします。",
+    "下载包含HTML内容的PDF。"
   ],
   [
-    "Useful for saving a simple report, invoice or HTML document. Text generally remains selectable in the saved PDF.",
-    "간단한 보고서·청구서·HTML 문서를 보관할 때 유용합니다. 저장한 PDF의 텍스트는 일반적으로 선택할 수 있습니다.",
-    "簡単なレポート・請求書・HTML文書の保存に便利です。保存したPDFの文字は通常選択できます。",
-    "适合保存简单报告、账单或HTML文档。保存的PDF文字通常可以选择。"
+    "Save a simple report, invoice or HTML document as a PDF without browser headers and footers.",
+    "간단한 보고서·청구서·HTML 문서를 브라우저 머리글과 바닥글 없이 PDF로 저장하세요.",
+    "簡単なレポート・請求書・HTML文書をブラウザーのヘッダーとフッターなしでPDF保存できます。",
+    "将简单报告、账单或HTML文档保存为PDF，不含浏览器页眉页脚。"
   ],
   [
-    "Your browser could not open printing. Try this page in Chrome, Edge or Safari with PDF printing available.",
-    "인쇄 화면을 열지 못했습니다. PDF 인쇄를 지원하는 Chrome·Edge·Safari에서 다시 시도해 주세요.",
-    "印刷を開けませんでした。PDF印刷対応のChrome・Edge・Safariでお試しください。",
-    "无法打开打印，请使用支持PDF打印的Chrome、Edge或Safari重试。"
+    "Could not create the PDF. Try a shorter document or simpler styles.",
+    "PDF를 만들지 못했습니다. 문서 길이를 줄이거나 스타일을 단순하게 바꿔 다시 시도해 주세요.",
+    "PDFを作成できませんでした。文書を短くするかスタイルを簡素化してください。",
+    "无法生成PDF，请缩短文档或简化样式后重试。"
+  ],
+  [
+    "Creating PDF…",
+    "PDF 생성 중…",
+    "PDFを作成中…",
+    "正在生成PDF…"
+  ],
+  [
+    "PDF is ready.",
+    "PDF가 준비됐습니다.",
+    "PDFの準備ができました。",
+    "PDF已就绪。"
   ]
 ];

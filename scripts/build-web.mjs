@@ -9,6 +9,8 @@ await mkdir(out,{recursive:true});
 await mkdir(out+'/assets',{recursive:true});
 await cp('web/html-copy.mjs',out+'/html-copy.js');
 await cp('web/html-to-pdf.js',out+'/assets/html-to-pdf.js');
+await build({entryPoints:['web/html-export.js'],outfile:out+'/assets/html-export.js',bundle:true,format:'esm',platform:'browser',minify:true});
+await cp('node_modules/html2canvas/LICENSE',out+'/assets/html2canvas-LICENSE');
 await build({entryPoints:['web/html-document.mjs'],outfile:out+'/assets/html-document.js',bundle:true,format:'esm',platform:'browser',minify:true});
 await cp('web/gif-copy.mjs',out+'/gif-copy.js');
 await mkdir(out+'/assets/vendor',{recursive:true});
