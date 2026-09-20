@@ -1,8 +1,15 @@
+import {gifRows} from '../web/gif-copy.mjs';
+import {build} from 'esbuild';
 import {uxRows,guideSteps} from '../web/ux-copy.mjs';
 import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
+await cp('web/gif-copy.mjs',out+'/gif-copy.js');
+await mkdir(out+'/assets/vendor',{recursive:true});
+await cp('web/gif-maker.js',out+'/assets/gif-maker.js');
+await cp('node_modules/gifenc/LICENSE.md',out+'/assets/vendor/gifenc-LICENSE');
+await build({entryPoints:['web/gif-worker.js'],outfile:out+'/assets/gif-worker.js',bundle:true,format:'esm',platform:'browser',minify:true});
 await cp('web/ux-copy.mjs',out+'/ux-copy.js');
 await cp('web/ads.txt',out+'/ads.txt');
 await cp('web/growth-copy.mjs',out+'/growth-copy.js');
@@ -33,8 +40,8 @@ const browse='<details class="browse-tools"><summary>'+uxRows[3][0]+'</summary><
 const help='<section class="home-help"><h2>'+uxRows[12][0]+'</h2><div><article><p>'+uxRows[13][0]+'</p><a href="/heic-to-jpg">HEIC → JPG</a> · <a href="/image-compressor">Image Compressor</a></article><article><p>'+uxRows[14][0]+'</p><a href="/extract-pdf-pages">Extract PDF pages</a></article></div></section>';
 await writeFile(out+'/index.html',shell(uxRows[1][0],uxRows[2][0],quickHtml+browse+help));
 for(const t of tools){
- const engine=['heic','pdfedit'].includes(t.type)?'file-tools':t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
- let html=await readFile((['compressor','heic','pdfedit'].includes(t.type)?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
+ const engine=t.type==='gif'?'gif-maker':['heic','pdfedit'].includes(t.type)?'file-tools':t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
+ let html=await readFile((['gif','compressor','heic','pdfedit'].includes(t.type)?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
  html=html.replace(/<title>[\s\S]*?<\/title>/,'<title>'+escape(t.title)+' | Paper Switch</title>');
  html=html.replace('<head>','<head><base href="/assets/">').replace('</head>',meta(t.title,t.description)+'</head>');
  html=html.replace('<body>','<body class="dedicated" data-engine="'+engine+'" data-tool="'+t.slug+'"'+(t.mode?' data-tool-mode="'+t.mode+'"':'')+'>');
@@ -49,8 +56,8 @@ for(const t of tools){
   html=html.replace('<div class="qr-settings"><label><input id="image-remove"','<div class="qr-settings" hidden><label><input id="image-remove"');
   html=html.replace(/<p>Click the original image[\s\S]*?<\/p><p>For solid backgrounds[\s\S]*?<\/p>/,'');
  }
- const steps=guideSteps(t)||t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
- :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.'];
+ const steps=t.type==='gif'?gifRows.slice(24,27).map(r=>r[0]):guideSteps(t)||(t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
+ :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.']);
  const preferred=t.type==='heic'?['image-compressor','jpg-to-pdf','image-resizer']:t.type==='pdfedit'?['merge-pdf','extract-pdf-pages','split-pdf','rotate-pdf']:t.type==='qr'?['wifi-qr','qr-generator','qr-reader']:t.slug==='image-compressor'?['image-resizer','jpg-to-pdf','heic-to-jpg']:[];
  const reverse=tools.find(x=>t.input&&x.input===t.output&&x.output===t.input&&x.slug!==t.slug);
  const related=[...new Set([...preferred,...(reverse?[reverse.slug]:[]),...tools.filter(x=>t.input&&x.input===t.input).map(x=>x.slug),'image-compressor','image-resizer'])].filter(slug=>slug!==t.slug).slice(0,4).map(slug=>tools.find(t=>t.slug===slug));

@@ -1,7 +1,9 @@
+import {gifRows} from './gif-copy.mjs';
 import {growthEntries} from './growth-copy.mjs';
 import {compressorRows} from './compressor-copy.mjs';
 // Four columns: English, Korean, Japanese, Simplified Chinese.
 export function searchCopy(t){
+ if(t.type==="gif")return {title:gifRows[0],description:gifRows[1],use:gifRows[30],how:["How it works","사용 방법","使い方","使用方法"]};
  if(t.slug==='image-compressor')return {title:compressorRows[16],description:compressorRows[1],use:compressorRows[17],how:compressorRows[9]};
  const entry=growthEntries.find(e=>e[0]===t.slug);if(entry)return {title:entry.slice(1,5),description:entry.slice(5,9),use:entry.slice(5,9),how:['How it works','사용 방법','使い方','使用方法']};
  const a=t.input?.toUpperCase(),b=t.output?.toUpperCase();

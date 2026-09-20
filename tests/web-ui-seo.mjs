@@ -17,7 +17,7 @@ for(const locale of locales){const titles=new Set();for(const base of bases){con
  const paragraphs=all.filter(n=>n.tagName==='p').map(content);if(['split-pdf','extract-pdf-pages','delete-pdf-pages','rotate-pdf'].some(s=>base==='/'+s)){assert.equal(paragraphs.filter(p=>p===attr(find(n=>attr(n,'name')==='description'),'content')).length,1);assert.ok(all.some(n=>n.tagName==='h3'));}
  }}
 assert.equal((await readFile('dist/sitemap.xml','utf8')).match(/<loc>/g).length,bases.length*4);
-console.log('PASS 192 static pages: unique titles, canonical/hreflang, descriptions, links, useful PDF FAQs and no repeated intro');
+console.log('PASS '+(bases.length*locales.length)+' static pages: unique titles, canonical/hreflang, descriptions, links, useful PDF FAQs and no repeated intro');
 const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);const browser=await chromium.launch({channel:'chrome',headless:true});
 try{const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('https://pagead2.googlesyndication.com/**',r=>r.fulfill({body:''}));
  await page.goto('http://127.0.0.1:4173/ko/');await page.waitForSelector('body[data-ready]');assert.equal(await page.locator('.quick-card').count(),6);assert.equal(await page.locator('.browse-tools').getAttribute('open'),null);
