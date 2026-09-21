@@ -1,0 +1,78 @@
+[
+  {
+    "name": "mupdf",
+    "version": "1.28.0",
+    "url": "https://mupdf.com/downloads/archive/mupdf-1.28.0-source.tar.gz",
+    "file": "mupdf-1.28.0-source.tar.gz",
+    "size": 68923736,
+    "sha256": "21c7f064903154f1c3a7458bee81f130fc36f9b5147ea13328f9980e02d2dea2",
+    "contains": [
+      "mupdf-1.28.0-source/COPYING",
+      "mupdf-1.28.0-source/docs/license.md",
+      "mupdf-1.28.0-source/platform/wasm/tools/build.sh",
+      "mupdf-1.28.0-source/resources/fonts/han/LICENSE.txt",
+      "mupdf-1.28.0-source/resources/fonts/noto/COPYING",
+      "mupdf-1.28.0-source/thirdparty/brotli/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/cmark-gfm/COPYING",
+      "mupdf-1.28.0-source/thirdparty/curl/COPYING",
+      "mupdf-1.28.0-source/thirdparty/extract/COPYING",
+      "mupdf-1.28.0-source/thirdparty/freeglut/COPYING",
+      "mupdf-1.28.0-source/thirdparty/freetype/LICENSE.TXT",
+      "mupdf-1.28.0-source/thirdparty/gumbo-parser/COPYING",
+      "mupdf-1.28.0-source/thirdparty/harfbuzz/COPYING",
+      "mupdf-1.28.0-source/thirdparty/harfbuzz/src/ms-use/COPYING",
+      "mupdf-1.28.0-source/thirdparty/jbig2dec/COPYING",
+      "mupdf-1.28.0-source/thirdparty/jbig2dec/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/lcms2/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/lcms2/plugins/threaded/COPYING.GPL3",
+      "mupdf-1.28.0-source/thirdparty/mujs/COPYING",
+      "mupdf-1.28.0-source/thirdparty/mujs/docs/license.html",
+      "mupdf-1.28.0-source/thirdparty/openjpeg/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/tesseract/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/zint/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/zint/backend_qt/COPYING",
+      "mupdf-1.28.0-source/thirdparty/zint/frontend/COPYING",
+      "mupdf-1.28.0-source/thirdparty/zint/frontend_qt/COPYING",
+      "mupdf-1.28.0-source/thirdparty/zlib/LICENSE",
+      "mupdf-1.28.0-source/thirdparty/zxing-cpp/LICENSE"
+    ]
+  },
+  {
+    "name": "heic-to",
+    "version": "1.5.2",
+    "url": "https://codeload.github.com/hoppergee/heic-to/tar.gz/refs/tags/v1.5.2",
+    "file": "heic-to-1.5.2-source.tar.gz",
+    "size": 5970326,
+    "sha256": "8beb13f9f09e444a2955a4e1f129f5a1458e15b6e7fd898ec38c857090296544",
+    "contains": [
+      "heic-to-1.5.2/LICENSE"
+    ]
+  },
+  {
+    "name": "libheif",
+    "version": "1.22.2",
+    "url": "https://codeload.github.com/strukturag/libheif/tar.gz/refs/tags/v1.22.2",
+    "file": "libheif-1.22.2-source.tar.gz",
+    "size": 2005884,
+    "sha256": "af30a8b32dfbc1dc86a7f0f55a53107dad35010a65ebf1feb468082e402b11e0",
+    "contains": [
+      "libheif-1.22.2/COPYING",
+      "libheif-1.22.2/examples/COPYING"
+    ]
+  },
+  {
+    "name": "libde265",
+    "version": "1.0.16",
+    "url": "https://github.com/strukturag/libde265/releases/download/v1.0.16/libde265-1.0.16.tar.gz",
+    "file": "libde265-1.0.16-source.tar.gz",
+    "size": 835657,
+    "sha256": "b92beb6b53c346db9a8fae968d686ab706240099cdd5aff87777362d668b0de7",
+    "contains": [
+      "libde265-1.0.16/COPYING",
+      "libde265-1.0.16/dec265/COPYING",
+      "libde265-1.0.16/sherlock265/COPYING",
+      "libde265-1.0.16/libde265/COPYING",
+      "libde265-1.0.16/enc265/COPYING"
+    ]
+  }
+]

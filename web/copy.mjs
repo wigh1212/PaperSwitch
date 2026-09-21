@@ -68,3 +68,5 @@ export const rows=[
 ['UTF-8 text is wrapped on A4 pages. Up to 200,000 characters and 100 pages. Tables and images are not reconstructed.','UTF-8 텍���트를 A4에 자동 줄바꿈합니다. 최대 20만 글자·100페이지이며 표와 이미지는 재구성하지 않습니다.','UTF-8テキストをA4に折り返します。最大20万文字・100ページ。表や画像は再構成しません。','将UTF-8文字自动换行排入A4页面。最多20万字、100页，不重建表格和图片。'],
 ['{0} | Paper Switch','{0} | Paper Switch','{0} | Paper Switch','{0} | Paper Switch']
 ];
+
+rows.push(['Open-source notices','오픈소스 고지','オープンソース表記','开源声明']);

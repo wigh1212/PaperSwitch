@@ -40,7 +40,7 @@ const link=t=>'<a href="/'+t.slug+'">'+menuLabel(t)+'</a>';
 const logo='<a class="brand" href="/" translate="no" aria-label="Paper Switch"><img src="/favicon.svg" width="34" height="34" alt=""><span>Paper Switch</span></a>';
 const menu='<nav class="format-nav" aria-label="Main navigation">'+formats.map(f=>'<details class="format-menu"><summary>'+label(f)+'</summary><div class="dropdown">'+tools.filter(t=>t.input===f).map(link).join('')+'</div></details>').join('')+'<details class="format-menu"><summary>Tools</summary><div class="dropdown">'+tools.filter(t=>!t.input).map(link).join('')+'</div></details></nav>';
 const header='<header class="site-header">'+logo+menu+'<label class="language-control"><span class="sr-only">Language</span><select id="language" aria-label="Language"><option value="en">English</option><option value="ko">한국어</option><option value="ja">日本語</option><option value="zh-CN">简体中文</option></select></label></header>';
-const footer='<footer class="site-footer"><span translate="no">Paper Switch</span><nav><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a></nav><small translate="no">MuPDF · AGPL-3.0-or-later</small></footer>';
+const footer='<footer class="site-footer"><span translate="no">Paper Switch</span><nav><a href="/about">About</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a></nav><small><a href="/assets/licenses/index.html">Open-source notices</a></small></footer>';
 const adSenseScript="<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6110796878581495\" crossorigin=\"anonymous\"></script>";
 const meta=(title,description,ads=true)=>'<meta name="google-site-verification" content="JIdKokUDjFkeRxD607YfHHpJQ9nnjR4Fa37FeFeDekI"><meta name="description" content="'+escape(description)+'"><meta property="og:title" content="'+escape(title)+'"><meta property="og:description" content="'+escape(description)+'"><meta property="og:type" content="website"><link rel="stylesheet" href="/site.css"><link rel="icon" href="/favicon.svg" type="image/svg+xml">'+(ads?adSenseScript:'');
 const shell=(title,description,body,ads=true)=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+escape(title)+' | Paper Switch</title><link rel="stylesheet" href="/assets/style.css">'+meta(title,description,ads)+'</head><body>'+header+'<main><h1>'+escape(title)+'</h1><p class="intro">'+escape(description)+'</p>'+body+'</main>'+footer+'<script type="module" src="/site.js"></script></body></html>';
@@ -92,3 +92,5 @@ await writeFile(out+'/_headers','/assets/*\n  X-Robots-Tag: noindex\n');
 console.log('Built '+tools.length+' tools with shared navigation and four-language UI.');
 
 await import('./build-seo.mjs');
+await import('./build-source-distribution.mjs');
+await import('./build-license-notices.mjs');
