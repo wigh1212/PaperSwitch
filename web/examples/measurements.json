@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-22",
+  "browser": "Chromium",
+  "samples": {
+    "conversion": {
+      "jpgBytes": 53939,
+      "pdfBytes": 117190,
+      "resultBytes": 33655,
+      "width": 1200,
+      "height": 800
+    },
+    "pdfCompression": {
+      "input": 51545,
+      "output": 8560,
+      "pages": 3
+    },
+    "imageCompression": {
+      "input": 53939,
+      "output": 21540,
+      "targetKB": 30,
+      "width": 1200,
+      "height": 800
+    },
+    "heic": {
+      "input": 718114,
+      "output": 427729,
+      "width": 1280,
+      "height": 854,
+      "source": "https://github.com/strukturag/libheif/blob/master/examples/example.heic"
+    }
+  }
+}

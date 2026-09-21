@@ -1,3 +1,4 @@
+import {practicalGuide} from './practical-guides.mjs';
 import {pdfCompressRows} from '../web/pdf-compress-copy.mjs';
 import {htmlRows} from '../web/html-copy.mjs';
 import {gifRows} from '../web/gif-copy.mjs';
@@ -7,6 +8,8 @@ import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
 import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
+await cp('web/practical-guides.mjs',out+'/practical-guides.js');
+await cp('web/examples',out+'/assets/examples',{recursive:true});
 await mkdir(out+'/assets',{recursive:true});
 await cp('web/pdf-compress-copy.mjs',out+'/pdf-compress-copy.js');
 for(const f of ['pdf-compressor.js','pdf-compress-worker.js','pdf-compress-core.mjs'])await cp('web/'+f,out+'/assets/'+(f==='pdf-compress-core.mjs'?'pdf-compress-core.js':f));
@@ -71,7 +74,7 @@ for(const t of tools){
  const preferred=t.type==='pdfcompress'?['merge-pdf','split-pdf','extract-pdf-pages']:t.input==='pdf'&&t.type!=='heic'?['compress-pdf','merge-pdf','extract-pdf-pages','split-pdf']:t.type==='heic'?['image-compressor','jpg-to-pdf','image-resizer']:t.type==='pdfedit'?['merge-pdf','extract-pdf-pages','split-pdf','rotate-pdf']:t.type==='qr'?['wifi-qr','qr-generator','qr-reader']:t.slug==='image-compressor'?['image-resizer','jpg-to-pdf','heic-to-jpg']:[];
  const reverse=tools.find(x=>t.input&&x.input===t.output&&x.output===t.input&&x.slug!==t.slug);
  const related=[...new Set([...preferred,...(reverse?[reverse.slug]:[]),...tools.filter(x=>t.input&&x.input===t.input).map(x=>x.slug),'image-compressor','image-resizer'])].filter(slug=>slug!==t.slug).slice(0,4).map(slug=>tools.find(t=>t.slug===slug));
- html=html.replace('</main>','<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
+ html=html.replace('</main>',practicalGuide(t.slug)+'<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.type==='convert'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
  html=html.replace(/<script type="module" src="[^"]+"><\/script>/,'<script type="module" src="/site.js"></script>');
@@ -80,7 +83,7 @@ for(const t of tools){
 const pages={
  about:['About Paper Switch','Simple tools for everyday files.','<p>Convert documents and images, merge PDFs, create and read QR codes, and resize images. Each tool runs in your browser.</p>'],
  contact:['Contact','Questions or feedback?','<h2>Email</h2><p><a translate="no" href="mailto:glsrhfo17@gmail.com">glsrhfo17@gmail.com</a></p><p>Include the tool name, browser and error message. Please do not send confidential files.</p>'],
- privacy:['Privacy','How files and preferences are handled.','<h2>Files and preferences</h2><p>Selected files and QR contents are not uploaded to a conversion server. Your language preference is saved in this browser and can be removed by clearing site data.</p><h2>Hosting and advertising</h2><p>Cloudflare hosts this website. Google AdSense is integrated to display advertising. Google and its partners may use cookies and process information such as IP addresses, browser details and ad interactions to deliver and measure ads, depending on your settings and applicable consent choices.</p><p><a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">How Google uses information</a></p><p>For privacy questions, use the contact page. Emails are handled separately by the email provider.</p><a href="/contact">Contact</a>']
+ privacy:['Privacy','How files and preferences are handled.','<h2>Files and preferences</h2><p>Selected files and QR contents are not uploaded to a conversion server. Your language preference is saved in this browser and can be removed by clearing site data.</p><h2>Hosting and advertising</h2><p>Cloudflare hosts this website. Google and its partners may use cookies and process information such as IP addresses, browser details and ad interactions to deliver and measure ads, depending on your settings and applicable consent choices.</p><p><a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">How Google uses information</a></p><p>For privacy questions, use the contact page. Emails are handled separately by the email provider.</p><a href="/contact">Contact</a>']
 };
 for(const [slug,[title,description,body]] of Object.entries(pages))await writeFile(out+'/'+slug+'.html',shell(title,description,'<section class="guide info-page">'+body+'</section>'));
 await writeFile(out+'/404.html',shell('Page not found','Choose a tool from the home page.','<a href="/">All tools</a>',false));

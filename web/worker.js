@@ -4,6 +4,13 @@ const routes=new Set(['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/priv
 export default {
  async fetch(request,env){
   const url=new URL(request.url),primary=new URL(SITE_ORIGIN);
+  const rootAlias=['saerokbit.com','www.saerokbit.com'].includes(url.hostname);
+  if(url.pathname==='/ads.txt'&&(rootAlias||url.hostname===primary.hostname||url.hostname==='www.'+primary.hostname)){
+   const response=await env.ASSETS.fetch(new Request(new URL('/ads.txt',SITE_ORIGIN),request));
+   const result=new Response(response.body,response);result.headers.set('Content-Type','text/plain; charset=utf-8');result.headers.delete('X-Robots-Tag');return result;
+  }
+  if(rootAlias&&url.pathname==='/robots.txt')return new Response('User-agent: *\nAllow: /\nSitemap: '+SITE_ORIGIN+'/sitemap-index.xml\n',{headers:{'Content-Type':'text/plain; charset=utf-8'}});
+  if(rootAlias)return Response.redirect(new URL(url.pathname+url.search,SITE_ORIGIN).href,301);
   if(url.hostname==='www.'+primary.hostname||(url.hostname===primary.hostname&&url.protocol!=='https:')){
    const target=new URL(url.pathname+url.search,SITE_ORIGIN);return Response.redirect(target.href,301);
   }

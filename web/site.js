@@ -1,3 +1,4 @@
+import {practicalRows} from '/practical-guides.js';
 import {pdfCompressRows} from '/pdf-compress-copy.js';
 import {htmlRows} from '/html-copy.js';
 import {gifRows} from '/gif-copy.js';
@@ -9,7 +10,7 @@ import {seoRows} from '/seo-copy.js';
 import {searchRows} from '/search-copy.js';
 import {initLanguages,registerTranslations,setLanguage} from '/assets/i18n.js';
 import {rows} from '/copy.js';
-registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
+registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
 registerTranslations(seoRows);
 registerTranslations(searchRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);
