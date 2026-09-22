@@ -4,7 +4,7 @@ import {parse} from 'parse5';
 import {pathToFileURL} from 'node:url';
 import {tools} from '../web/tools.mjs';
 import {SITE_ORIGIN,locales,localizedPath} from '../web/seo-config.mjs';
-import {uxRows} from '../web/ux-copy.mjs';
+import {landingRows} from '../web/landing-copy.mjs';
 const bases=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
 function nodes(root){const a=[];function visit(n){a.push(n);for(const c of n.childNodes||[])visit(c);}visit(root);return a;}
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
@@ -20,13 +20,13 @@ assert.equal((await readFile('dist/sitemap.xml','utf8')).match(/<loc>/g).length,
 console.log('PASS '+(bases.length*locales.length)+' static pages: unique titles, canonical/hreflang, descriptions, links, useful PDF FAQs and no repeated intro');
 const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);const browser=await chromium.launch({channel:'chrome',headless:true});
 try{const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('https://pagead2.googlesyndication.com/**',r=>r.fulfill({body:''}));
- await page.goto('http://127.0.0.1:4173/ko/');await page.waitForSelector('body[data-ready]');assert.equal(await page.locator('.quick-card').count(),6);assert.equal(await page.locator('.browse-tools').getAttribute('open'),null);
- for(const [i,l] of locales.entries()){await page.selectOption('#language',l.language);assert.equal(await page.locator('h1').textContent(),uxRows[1][i]);assert.equal(await page.locator('.quick-card').first().getAttribute('href'),localizedPath('/jpg-to-pdf',l.language));}
+ await page.goto('http://127.0.0.1:4173/ko/');await page.waitForSelector('body[data-ready]');assert.equal(await page.locator('.quick-card').count(),6);assert.equal(await page.locator('.format-menu').count(),3);assert.equal(await page.locator('.tool-category[open]').count(),0);assert.equal(await page.locator('.category-links a').count(),tools.length);assert.equal(await page.locator('.task-nav .dropdown a').count(),tools.length);
+ for(const [i,l] of locales.entries()){await page.selectOption('#language',l.language);assert.equal(await page.locator('h1').textContent(),landingRows[0][i]);assert.equal(await page.locator('.quick-card').first().getAttribute('href'),localizedPath('/jpg-to-pdf',l.language));}
  await page.selectOption('#language','ko');await mkdir('test-results',{recursive:true});await page.screenshot({path:'test-results/home-ui-desktop.png',fullPage:true});
- await page.locator('.browse-tools>summary').click();await page.click('[data-source="heic"]');assert.ok(await page.locator('#group-heic').isVisible());await page.locator('[data-source="heic"]').press('ArrowRight');assert.ok(await page.locator('#group-png').isVisible());
- for(const width of [390,320]){await page.setViewportSize({width,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
- await page.locator('.browse-tools>summary').click();await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-ui-mobile.png',fullPage:true});
+ await page.locator('.tool-category>summary').first().focus();await page.keyboard.press('Enter');assert.ok(await page.locator('.category-links').first().isVisible());
+ for(const width of [390,320]){await page.setViewportSize({width,height:844});for(const summary of await page.locator('.task-nav summary').all()){await summary.focus();await page.keyboard.press('Enter');assert.equal(await page.locator('.task-nav details[open]').count(),1);const box=await page.locator('.task-nav details[open] .dropdown').boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width);await page.keyboard.press('Escape');assert.equal(await page.locator('.task-nav details[open]').count(),0);}assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
+ await page.locator('.tool-category>summary').first().click();await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/home-ui-mobile.png',fullPage:true});
  await page.locator('.quick-card').first().click();await page.waitForSelector('body[data-ready]');assert.ok(page.url().endsWith('/ko/jpg-to-pdf'));assert.ok(await page.locator('.related a[href="/ko/pdf-to-jpg"]').count());assert.deepEqual(errors,[]);
- const context=await browser.newContext({javaScriptEnabled:false});const raw=await context.newPage();await raw.goto('http://127.0.0.1:4173/ko/');assert.equal(await raw.locator('.quick-card').count(),6);assert.equal(await raw.locator('h1').textContent(),uxRows[1][1]);await context.close();
- console.log('PASS home discovery, language switching, keyboard tabs, mobile 320/390, related link and no-JS home');
+ const context=await browser.newContext({javaScriptEnabled:false});const raw=await context.newPage();await raw.goto('http://127.0.0.1:4173/ko/');assert.equal(await raw.locator('.quick-card').count(),6);assert.equal(await raw.locator('h1').textContent(),landingRows[0][1]);await context.close();
+ console.log('PASS home discovery, language switching, keyboard categories, mobile 320/390, related link and no-JS home');
 }finally{await browser.close();}
