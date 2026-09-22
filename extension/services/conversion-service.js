@@ -1,4 +1,3 @@
-import {svgToPDF,webpToPDF,txtToPDF} from '../vendor/svg-to-pdf.js';
 import {validateSVG} from '../validate-svg.js';
 import {svgToImage,imageToSVG} from '../svg-image.js';
 import {baseName} from '../core.js';
@@ -17,9 +16,9 @@ export const localConversionService={
     if(config.output==='svg')result=await imageToSVG(bytes,config.input);
     else if(config.input==='svg'){
       const svg=validateSVG(bytes);
-      result=config.output==='pdf'?await svgToPDF(svg):await svgToImage(svg,config.output,options.scale);
-    }else if(config.input==='txt')result=await txtToPDF(bytes);
-    else if(config.output==='pdf')result=await webpToPDF(bytes,config.input);
+      result=config.output==='pdf'?await (await import('../vendor/svg-to-pdf.js')).svgToPDF(svg):await svgToImage(svg,config.output,options.scale);
+    }else if(config.input==='txt')result=await (await import('../vendor/svg-to-pdf.js')).txtToPDF(bytes);
+    else if(config.output==='pdf')result=await (await import('../vendor/svg-to-pdf.js')).webpToPDF(bytes,config.input);
     else result=await convertRaster(bytes,config.input,config.output);
     signal?.throwIfAborted();return {[`${baseName(file.name)}.${config.output}`]:result};
   }

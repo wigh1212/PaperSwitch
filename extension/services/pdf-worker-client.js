@@ -1,5 +1,4 @@
 import {resolveOCRLanguage} from '../ocr-languages.js';
-import Tesseract from '../vendor/ocr/tesseract.esm.min.js';
 export function convertDocument(bytes,file,config,options,signal,onProgress){
   return new Promise((resolve,reject)=>{
     let ocr=null,settled=false;
@@ -21,6 +20,8 @@ export function convertDocument(bytes,file,config,options,signal,onProgress){
         try{
           onProgress?.({kind:'ocr',page:data.page,progress:0});
           if(!ocr){
+            const {default:Tesseract}=await import('../vendor/ocr/tesseract.esm.min.js');
+            if(settled)return;
             const ready=await Tesseract.createWorker(resolveOCRLanguage(options.ocrLanguage),1,{
               workerPath:new URL('../vendor/ocr/worker.min.js',import.meta.url).href,
               corePath:new URL('../vendor/ocr/core',import.meta.url).href,

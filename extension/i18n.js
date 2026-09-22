@@ -45,9 +45,9 @@ export function initLanguages(){
   if(node.parentElement?.closest('script,style,title,#downloads,#queue,#language,[translate="no"]')||dynamic.has(node.parentElement))continue;
   texts.push({node,source:node.data});
  }
- for(const element of document.querySelectorAll('[aria-label],[placeholder],meta[name="description"],meta[property="og:title"],meta[property="og:description"]')){
+ for(const element of document.querySelectorAll('[aria-label],[placeholder],[alt],meta[name="twitter:title"],meta[name="twitter:description"],meta[name="description"],meta[property="og:title"],meta[property="og:description"]')){
   if(element.id==='language'||element.closest('[translate="no"]'))continue;
-  for(const key of ['aria-label','placeholder','content'])if(element.hasAttribute(key))attributes.push({element,key,source:element.getAttribute(key)});
+  for(const key of ['aria-label','placeholder','alt','content'])if(element.hasAttribute(key))attributes.push({element,key,source:element.getAttribute(key)});
  }
  function render(){
   document.documentElement.lang=language;

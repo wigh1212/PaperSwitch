@@ -65,7 +65,7 @@ export const rows=[
 ['Choose separate PDFs or combine files in list order. Transparency becomes white. Image text is not converted to editable text.','파일별 PDF 또는 목록 순서로 합친 PDF를 선택하세요. 투명 영역은 흰색이 되며 이미지의 글자는 편집 가능한 글자로 바뀌지 않습니다.','個別のPDFか一覧順に結合したPDFを選べます。透明部分は白になり、画像内の文字は編集可能な文字に変換されません。','可生成独立PDF或按列表顺序合并。透明区域变为白色，图片文字不会转为可编辑文字。'],
 ['Keep original pixel dimensions. Transparency becomes white, and animated WEBP uses its first frame. Re-encoding cannot recover lost detail.','원본 픽셀 크기를 유지합니다. 투명 영역은 흰색으로, 움직이는 WEBP는 첫 프레임으로 저장됩니다. 다시 저장해도 손실된 정보는 복원되지 않습니다.','元のピクセル寸法を維持します。透明部分は白になり、アニメーションWEBPは最初のフレームを使用します。失われた細部は復元されません。','保持原始像素尺寸。透明区域变为白色，动态WEBP仅使用第一帧。重新编码无法恢复丢失的细节。'],
 ['TIFF pages are processed individually. Uncompressed TIFF output can be large.','TIFF는 페이지별로 처리합니다. 압축하지 않은 TIFF 결과는 파일이 클 수 있습니다.','TIFFはページごとに処理します。非圧縮TIFFの出力は大きくなる場合があります。','TIFF按页处理。未压缩的TIFF输出可能较大。'],
-['UTF-8 text is wrapped on A4 pages. Up to 200,000 characters and 100 pages. Tables and images are not reconstructed.','UTF-8 텍���트를 A4에 자동 줄바꿈합니다. 최대 20만 글자·100페이지이며 표와 이미지는 재구성하지 않습니다.','UTF-8テキストをA4に折り返します。最大20万文字・100ページ。表や画像は再構成しません。','将UTF-8文字自动换行排入A4页面。最多20万字、100页，不重建表格和图片。'],
+['UTF-8 text is wrapped on A4 pages. Up to 200,000 characters and 100 pages. Tables and images are not reconstructed.','UTF-8 텍스트를 A4에 자동 줄바꿈합니다. 최대 20만 글자·100페이지이며 표와 이미지는 재구성하지 않습니다.','UTF-8テキストをA4に折り返します。最大20万文字・100ページ。表や画像は再構成しません。','将UTF-8文字自动换行排入A4页面。最多20万字、100页，不重建表格和图片。'],
 ['{0} | Paper Switch','{0} | Paper Switch','{0} | Paper Switch','{0} | Paper Switch']
 ];
 

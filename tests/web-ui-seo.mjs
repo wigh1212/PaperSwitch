@@ -5,7 +5,7 @@ import {pathToFileURL} from 'node:url';
 import {tools} from '../web/tools.mjs';
 import {SITE_ORIGIN,locales,localizedPath} from '../web/seo-config.mjs';
 import {landingRows} from '../web/landing-copy.mjs';
-const bases=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
+const bases=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms'];
 function nodes(root){const a=[];function visit(n){a.push(n);for(const c of n.childNodes||[])visit(c);}visit(root);return a;}
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
 const content=n=>(n.childNodes||[]).map(c=>c.value||content(c)).join('');

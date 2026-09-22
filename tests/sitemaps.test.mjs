@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {tools} from '../web/tools.mjs';
 import {SITE_ORIGIN,locales,localizedPath} from '../web/seo-config.mjs';
 import {buildSitemaps} from '../scripts/sitemaps.mjs';
-const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
+const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms'];
 const locs=s=>[...s.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
 test('language sitemaps partition canonical URLs without omissions or duplicates',async()=>{
  const combined=locs(await readFile('dist/sitemap.xml','utf8')),parts=[];

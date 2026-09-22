@@ -10,7 +10,7 @@ import {seoRows,faqsFor,faqPairs} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchRows(tools));
 const origin=process.env.WEB_BASE_URL||'http://127.0.0.1:4174';
-const bases=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
+const bases=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms'];
 const routes=bases.flatMap(base=>locales.map(l=>({base,language:l.language,path:localizedPath(base,l.language)})));
 function nodes(doc){const all=[];function walk(n){all.push(n);for(const c of n.childNodes||[])walk(c);}walk(doc);return all;}
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;

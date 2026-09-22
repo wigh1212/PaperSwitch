@@ -1,3 +1,5 @@
+import {serviceRows} from '../web/service-content.mjs';
+import {factRows} from '../web/tool-facts.mjs';
 import {landingRows} from '../web/landing-copy.mjs';
 import {practicalRows} from '../web/practical-guides.mjs';
 import {pdfCompressRows} from '../web/pdf-compress-copy.mjs';
@@ -17,9 +19,9 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
-const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy'];
+const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms'];
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
 function set(n,k,v){n.attrs??=[];const a=n.attrs.find(a=>a.name===k);if(a)a.value=v;else n.attrs.push({name:k,value:v});}
 function walk(n,fn){fn(n);for(const child of n.childNodes||[])walk(child,fn);}
@@ -54,10 +56,8 @@ for(const base of routes){
    text(find(doc,n=>(attr(n,'class')||'').split(' ').includes('intro')),copy.description[0]);
    const guide=find(doc,n=>(attr(n,'class')||'').split(' ').includes('guide'));
    if(guide){text(find(guide,n=>n.tagName==='h2'),copy.how[0]);if(copy.use[0]!==copy.description[0])append(guide,'<p>'+esc(copy.use[0])+'</p>');}
-   const extras=extraFaqs(tool);
-   if(guide&&extras.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+extras.map(([q,a])=>'<h3>'+esc(uxRows[q][0])+'</h3><p>'+esc(uxRows[a][0])+'</p>').join('')+'</section>');
-   const faqs=faqsFor(tool);
-   if(guide&&faqs.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+faqs.map(i=>'<h3>'+esc(faqPairs[i][0])+'</h3><p>'+esc(faqPairs[i][1])+'</p>').join('')+'</section>');
+   const questions=[...extraFaqs(tool).map(([q,a])=>[uxRows[q][0],uxRows[a][0]]),...faqsFor(tool).map(i=>faqPairs[i])];
+   if(guide&&questions.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+questions.map(([q,a])=>'<h3>'+esc(q)+'</h3><p>'+esc(a)+'</p>').join('')+'</section>');
    if(tool.type==='convert'){
     const input=find(doc,n=>attr(n,'id')==='file');set(input,'accept',tool.input==='jpg'?'.jpg,.jpeg':tool.input==='tiff'?'.tif,.tiff':'.'+tool.input);
     text(find(doc,n=>attr(n,'id')==='convert'),tool.slug==='merge-pdf'?'Merge PDFs ↗':tool.output.toUpperCase()+'로 변환 ↗');
@@ -72,7 +72,7 @@ for(const base of routes){
     }else node.value=translate(node.value,language);
    }
    for(const a of node.attrs||[]){
-    if(!blocked&&['placeholder','aria-label'].includes(a.name))a.value=translate(a.value,language);
+    if(!blocked&&['placeholder','aria-label','alt','title'].includes(a.name))a.value=translate(a.value,language);
     if(node.tagName==='meta'&&a.name==='content'&&(['description'].includes(attr(node,'name'))||['og:title','og:description'].includes(attr(node,'property'))))a.value=translate(a.value,language);
    }
    if(node.tagName==='a'){
@@ -85,6 +85,7 @@ for(const base of routes){
    for(const child of node.childNodes||[])localize(child,blocked);
   }
   localize(doc);
+  append(head,'<meta name="twitter:card" content="summary"><meta name="twitter:title" content="'+esc(attr(find(doc,n=>attr(n,'property')==='og:title'),'content'))+'"><meta name="twitter:description" content="'+esc(attr(find(doc,n=>attr(n,'name')==='description'),'content'))+'">');
   const current=SITE_ORIGIN+localizedPath(base,language);
   append(head,'<link rel="canonical" href="'+current+'"><meta property="og:url" content="'+current+'">'+locales.map(l=>'<link rel="alternate" hreflang="'+l.language+'" href="'+SITE_ORIGIN+localizedPath(base,l.language)+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+SITE_ORIGIN+base+'">');
   const heading=find(doc,n=>n.tagName==='h1'),headingText=heading?.childNodes.filter(n=>n.nodeName==='#text').map(n=>n.value).join('')||'Paper Switch';

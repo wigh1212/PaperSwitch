@@ -1,3 +1,5 @@
+import {serviceRows} from '/service-content.js';
+import {factRows} from '/tool-facts.js';
 import {landingRows} from '/landing-copy.js';
 import {practicalRows} from '/practical-guides.js';
 import {pdfCompressRows} from '/pdf-compress-copy.js';
@@ -11,7 +13,7 @@ import {seoRows} from '/seo-copy.js';
 import {searchRows} from '/search-copy.js';
 import {initLanguages,registerTranslations,setLanguage} from '/assets/i18n.js';
 import {rows} from '/copy.js';
-registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
+registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
 registerTranslations(seoRows);
 registerTranslations(searchRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);

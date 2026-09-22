@@ -192,5 +192,5 @@ export const uxRows=[
     "仅转换主要静态图片，不保留Live Photo视频及原元数据。如需这些信息请保留HEIC原文件。"
   ]
 ];
-export function guideSteps(t){const r=i=>uxRows[i][0];if(t.type==='pdfedit')return [r(16),r(({'split-pdf':20,'extract-pdf-pages':18,'delete-pdf-pages':19,'rotate-pdf':21})[t.slug]),r(17)];if(t.type==='heic')return [r(22),r(16),r(23)];if(t.slug==='wifi-qr')return [r(24),r(25),r(17)];return null;}
+export function guideSteps(t){const r=i=>uxRows[i][0];if(t.type==='pdfedit')return [r(16),r(({'split-pdf':20,'extract-pdf-pages':18,'delete-pdf-pages':19,'rotate-pdf':21})[t.slug]),r(17)];if(t.type==='heic')return [r(22),r(23)];if(t.slug==='wifi-qr')return [r(24),r(25),r(17)];return null;}
 export function extraFaqs(t){return t.type==='pdfedit'?[[26,27],[28,29]]:t.type==='heic'?[[30,31]]:[];}

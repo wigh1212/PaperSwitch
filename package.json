@@ -21,7 +21,9 @@
     "test:web:gif": "node tests/web-gif.mjs",
     "test:web:html-pdf": "node tests/web-html-pdf.mjs",
     "test:web:pdf-compress": "node tests/web-pdf-compress.mjs",
-    "test:web:practical-guides": "node tests/web-practical-guides.mjs"
+    "test:web:practical-guides": "node tests/web-practical-guides.mjs",
+    "test:site-audit": "node tests/site-audit.mjs",
+    "test:web:site-audit": "node tests/web-site-audit.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",
