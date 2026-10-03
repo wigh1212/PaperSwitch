@@ -1,0 +1,28 @@
+{
+  "width": 640,
+  "height": 400,
+  "sourceBytes": 16412,
+  "jpgBytes": 14690,
+  "webpBytes": 6366,
+  "pngCopyBytes": 50695,
+  "sourceCorner": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "jpgCorner": [
+    255,
+    255,
+    255,
+    255
+  ],
+  "webpCorner": [
+    255,
+    255,
+    255,
+    255
+  ],
+  "jpgPngDecodedPixelsEqual": true,
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36"
+}

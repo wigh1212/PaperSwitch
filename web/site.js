@@ -1,3 +1,4 @@
+import {rasterExampleRows} from '/raster-example-copy.js';
 import {serviceRows} from '/service-content.js';
 import {factRows} from '/tool-facts.js';
 import {landingRows} from '/landing-copy.js';
@@ -13,7 +14,7 @@ import {seoRows} from '/seo-copy.js';
 import {searchRows} from '/search-copy.js';
 import {initLanguages,registerTranslations,setLanguage} from '/assets/i18n.js';
 import {rows} from '/copy.js';
-registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
+registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
 registerTranslations(seoRows);
 registerTranslations(searchRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);
@@ -57,3 +58,10 @@ window.addEventListener('popstate',()=>{
 const engine=document.body.dataset.engine;
 if(engine)await import('/assets/'+engine+'.js');else initLanguages();
 document.body.dataset.ready='true';
+
+// Request the configured unit once; language changes must not refresh ads.
+const homeAd=document.querySelector('[data-home-ad]');
+if(homeAd){
+ try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}
+ catch(error){console.warn('Home ad could not be initialized',error);}
+}

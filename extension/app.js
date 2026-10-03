@@ -23,9 +23,9 @@ function switchMode(next){
   if(config.input==='svg'&&config.output!=='pdf')$('webp-options').hidden=false;
   const svgImage=config.input==='svg'&&config.output!=='pdf';
   [...$('scale').options].forEach((option,i)=>setText(option,svgImage?`${i+1}× · Original pixel dimensions`:['Standard · 72 dpi','Sharp · 144 dpi','Extra sharp · 216 dpi'][i]));
-  setText($('convert'),`${config.output.toUpperCase()}로 변환 ↗`);
+  setText($('convert'),`${config.output.toUpperCase()}로 변환`);
   setText($('mode-note'),config.input==='pdf'?'페이지마다 파일을 만들어요. 여러 결과는 ZIP으로도 저장해요.':'파일마다 별도의 PDF를 만들어요. 여러 결과는 ZIP으로도 저장해요.');
-  if(config.operation==='merge'){setText($('convert'),'Merge PDFs ↗');setText($('mode-note'),'Merge all pages in the order below. Use the arrows to change the file order.');}
+  if(config.operation==='merge'){setText($('convert'),'Merge PDFs');setText($('mode-note'),'Merge all pages in the order below. Use the arrows to change the file order.');}
   if(mode==='pdf-txt')setText($('mode-note'),'Extract text to one TXT per PDF. Pages without text use OCR in the selected language.');
   if(mode==='txt-pdf')setText($('mode-note'),'UTF-8 텍스트를 한글 폰트가 포함된 A4 문서로 만들어요.');
   if(config.input==='tiff'&&config.output==='pdf')setText($('mode-note'),'TIFF의 모든 페이지를 파일별 PDF 하나로 만들어요.');
@@ -45,9 +45,9 @@ function select(selected){
 function rowStatus(index,message){setText($('queue').children[index].querySelector('small'),message);}
 function results(entries,success,failed,config){
   const prepared=services.downloads.prepare(entries,config.output);if(!prepared)return;
-  for(const file of prepared.files){const link=document.createElement('a');link.href=file.url;link.download=file.name;link.textContent=file.name+' ↓';$('downloads').append(link);}
+  for(const file of prepared.files){const link=document.createElement('a');link.href=file.url;link.download=file.name;link.textContent=file.name;$('downloads').append(link);}
   $('download').href=prepared.main.url;$('download').download=prepared.main.name;
-  setText($('download'),prepared.files.length===1?'Download file ↓':'Download all as ZIP ↓');
+  setText($('download'),prepared.files.length===1?'Download file':'Download all as ZIP');
   setText($('result-info'),'Succeeded: '+success+' · Failed: '+failed+' · Outputs: '+prepared.files.length+' · '+readable(prepared.main.size));$('result').hidden=false;
 }
 for(const key of Object.keys(modes))$(`${key}-mode`).onclick=()=>switchMode(key);

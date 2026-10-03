@@ -1,6 +1,7 @@
+import {rasterExample} from './raster-examples.mjs';
 import {serviceContent as service} from '../web/service-content.mjs';
 import {factContent as facts} from '../web/tool-facts.mjs';
-import {landingRows} from '../web/landing-copy.mjs';
+import {landingRows,homeUiRows} from '../web/landing-copy.mjs';
 import {practicalGuide} from './practical-guides.mjs';
 import {pdfCompressRows} from '../web/pdf-compress-copy.mjs';
 import {htmlRows} from '../web/html-copy.mjs';
@@ -12,6 +13,7 @@ import {tools,formats,label} from '../web/tools.mjs';
 const out='dist',escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 await mkdir(out,{recursive:true});
 await cp('web/landing-copy.mjs',out+'/landing-copy.js');
+await cp('web/raster-example-copy.mjs',out+'/raster-example-copy.js');
 await cp('web/service-content.mjs',out+'/service-content.js');
 await cp('web/tool-facts.mjs',out+'/tool-facts.js');
 await cp('web/practical-guides.mjs',out+'/practical-guides.js');
@@ -40,8 +42,8 @@ await cp('node_modules/heic-to/LICENSE',out+'/assets/vendor/heic-to-LICENSE');
 await cp('web/image-compressor.js',out+'/assets/image-compressor.js');
 await cp('web/compressor-copy.mjs',out+'/compressor-copy.js');
 await cp('extension',out+'/assets',{recursive:true,filter:path=>!path.endsWith('manifest.json')&&!path.endsWith('background.js')});
-for(const file of ['site.css','site.js','copy.mjs'])await cp('web/'+file,out+'/'+(file==='copy.mjs'?'copy.js':file));
-const menuLabel=t=>t.slug.includes('-to-')?label(t.input)+' → '+label(t.output):escape(t.title);
+for(const file of ['site.css','home.css','site.js','copy.mjs'])await cp('web/'+file,out+'/'+(file==='copy.mjs'?'copy.js':file));
+const menuLabel=t=>t.slug.includes('-to-')?label(t.input)+' to '+label(t.output):escape(t.title);
 const link=t=>'<a href="/'+t.slug+'">'+menuLabel(t)+'</a>';
 const logo='<a class="brand" href="/" translate="no" aria-label="Paper Switch"><img src="/favicon.svg" width="34" height="34" alt=""><span>Paper Switch</span></a>';
 const lr=i=>escape(landingRows[i][0]);
@@ -58,13 +60,28 @@ const footer='<footer class="site-footer"><span translate="no">Paper Switch</spa
 const adSenseScript="<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6110796878581495\" crossorigin=\"anonymous\"></script>";
 const meta=(title,description,ads=true)=>'<meta name="google-site-verification" content="JIdKokUDjFkeRxD607YfHHpJQ9nnjR4Fa37FeFeDekI"><meta name="description" content="'+escape(description)+'"><meta property="og:title" content="'+escape(title)+'"><meta property="og:description" content="'+escape(description)+'"><meta property="og:type" content="website"><link rel="stylesheet" href="/site.css"><link rel="icon" href="/favicon.svg" type="image/svg+xml">'+(ads?adSenseScript:'<meta name="robots" content="noindex">');
 const shell=(title,description,body,ads=true)=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+escape(title)+' | Paper Switch</title><link rel="stylesheet" href="/assets/style.css">'+meta(title,description,ads)+'</head><body>'+header+'<main><h1>'+escape(title)+'</h1><p class="intro">'+escape(description)+'</p>'+body+'</main>'+footer+'<script type="module" src="/site.js"></script></body></html>';
-const quick=[['jpg-to-pdf',6,'JPG → PDF'],['pdf-to-jpg',7,'PDF → JPG'],['image-compressor',8,'KB ↓'],['merge-pdf',9,'PDF + PDF'],['heic-to-jpg',10,'HEIC → JPG'],['qr-generator',11,'QR']];
-const hero='<section class="landing-hero"><div><p class="eyebrow">'+lr(5)+'</p><h1>'+lr(0)+'</h1><p class="intro">'+lr(1)+'</p><div class="hero-actions"><a class="primary-action" href="/jpg-to-pdf">'+lr(7)+'</a><a class="secondary-action" href="#all-tools">'+lr(6)+' <span aria-hidden="true">↗</span></a></div><div class="home-trust"><span>'+uxRows[4][0]+'</span><span>'+uxRows[5][0]+'</span></div></div><div class="hero-art" aria-hidden="true"><div class="art-orbit"></div><div class="file-paper paper-back"><b>JPG</b><div class="landscape"><i></i></div><span></span><span></span></div><div class="file-paper paper-front"><b>PDF</b><div class="paper-lines"></div><div class="paper-chart"><i></i><i></i><i></i><i></i></div></div><div class="art-switch">↗</div><div class="art-caption" translate="no">JPG → PDF</div></div></section>';
-const quickHtml='<section class="landing-section"><div class="section-heading"><h2>'+lr(8)+'</h2><p>'+lr(9)+'</p></div><div class="quick-tools">'+quick.map(([slug,index,badge])=>'<a class="quick-card" href="/'+slug+'"><span class="quick-icon" aria-hidden="true">'+badge+'</span><h3>'+uxRows[index][0]+'</h3><span class="quick-name">'+escape(tools.find(t=>t.slug===slug).title)+'</span><span class="quick-arrow" aria-hidden="true">↗</span></a>').join('')+'</div></section>';
-const browse='<section id="all-tools" class="landing-section all-tools"><div class="section-heading"><h2>'+lr(10)+'</h2><p>'+lr(11)+'</p></div>'+categories.map(c=>'<details class="tool-category"><summary><span>'+c.name+'</span><span class="category-count" aria-hidden="true">'+c.items.length+'</span></summary><div class="category-links'+(c.groups?' grouped-menu':'')+'">'+groupedLinks(c)+'</div></details>').join('')+'</section>';
-const steps='<section class="landing-section steps-section"><h2>'+lr(12)+'</h2><ol>'+[13,15,17].map((n,i)=>'<li><span aria-hidden="true">0'+(i+1)+'</span><h3>'+lr(n)+'</h3><p>'+lr(n+1)+'</p></li>').join('')+'</ol></section>';
-const examples='<section class="landing-section"><div class="section-heading"><h2>'+lr(19)+'</h2><p>'+lr(20)+'</p></div><div class="landing-examples">'+[['jpg-to-pdf',21,'JPG → PDF'],['image-compressor',22,'IMAGE'],['compress-pdf',23,'PDF']].map(([slug,n,badge])=>'<a href="/'+slug+'"><span class="example-type" aria-hidden="true">'+badge+'</span><h3>'+lr(n)+'</h3><span aria-hidden="true">↗</span></a>').join('')+'</div></section>';
-let home=shell(landingRows[0][0],landingRows[1][0],'');home=home.replace('<body>','<body class="landing">').replace(/<main>[\s\S]*?<\/main>/,'<main>'+hero+quickHtml+browse+steps+examples+'</main>');
+const quick=[['jpg-to-pdf',6,'JPG to PDF'],['pdf-to-jpg',7,'PDF to JPG'],['image-compressor',8,'KB'],['merge-pdf',9,'PDF + PDF'],['heic-to-jpg',10,'HEIC to JPG'],['qr-generator',11,'QR']];
+const homeText=i=>escape(homeUiRows[i][0]);
+const homeIcons=[
+ '<rect x="9" y="6" width="23" height="30" rx="3"/><path d="M16 12h9m-9 5h9"/><rect x="20" y="21" width="21" height="17" rx="3" fill="var(--icon-bg)"/><circle cx="35" cy="26" r="1.5"/><path d="m22 35 6-7 5 5 3-3 3 5"/>',
+ '<path d="M12 8h17l7 7v22a3 3 0 0 1-3 3H12a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3Z"/><path d="M28 8v8h8"/><rect x="16" y="23" width="25" height="16" rx="3" fill="var(--icon-bg)"/><path d="m19 36 7-8 5 6 3-3 4 5"/>',
+ '<rect x="12" y="12" width="24" height="24" rx="4"/><path d="m16 30 6-7 4 5 3-3 4 5M5 16V6h10m28 26v10H33M5 6l7 7m31 29-7-7"/><circle cx="30" cy="19" r="2"/>',
+ '<rect x="7" y="7" width="23" height="29" rx="3"/><path d="M13 14h10m-10 6h10"/><rect x="18" y="14" width="23" height="29" rx="3" fill="var(--icon-bg)"/><path d="M24 22h10m-10 6h10m-10 6h7"/>',
+ '<rect x="9" y="6" width="24" height="34" rx="5"/><path d="M17 11h8"/><rect x="18" y="21" width="23" height="18" rx="3" fill="var(--icon-bg)"/><path d="m21 36 6-7 5 5 3-3 3 5"/><circle cx="35" cy="26" r="1.5"/>',
+ '<rect x="8" y="8" width="12" height="12" rx="2"/><rect x="28" y="8" width="12" height="12" rx="2"/><rect x="8" y="28" width="12" height="12" rx="2"/><path d="M29 28h5v6h6v6H29v-6m11-7v2"/>'
+];
+const homeIcon=i=>'<span class="tool-illustration illustration-'+i+'" aria-hidden="true"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" focusable="false">'+homeIcons[i]+'</svg></span>';
+const hero='<section class="landing-hero"><h1>'+lr(0)+'</h1><p class="intro">'+homeText(0)+'</p></section>';
+const proof='<aside class="hero-proof"><h2>'+lr(63)+'</h2><p>'+lr(64)+'</p><div class="proof-pair">'+[['transparency-source.png',66],['transparency-result.jpg',67]].map(([file,n])=>'<figure><div class="checkerboard"><img width="640" height="400" src="/assets/examples/'+file+'" alt="'+lr(n)+'"></div><figcaption>'+lr(n)+'</figcaption></figure>').join('')+'</div><a href="/png-to-jpg">'+lr(65)+'</a></aside>';
+const quickHtml='<section class="landing-section home-shortcuts" aria-labelledby="quick-heading"><h2 id="quick-heading" class="sr-only">'+lr(8)+'</h2><div class="quick-tools">'+quick.map(([slug],i)=>'<a class="quick-card" href="/'+slug+'">'+homeIcon(i)+'<h3>'+homeText(i+1)+'</h3></a>').join('')+'</div><div class="shortcut-footer"><div class="home-trust"><span>'+uxRows[4][0]+'</span><span>'+uxRows[5][0]+'</span></div><a class="browse-index" href="#all-tools">'+lr(6)+'</a></div></section>';
+const browse='<section id="all-tools" class="landing-section all-tools"><div class="section-heading"><h2>'+lr(10)+'</h2></div>'+categories.map(c=>'<details class="tool-category"><summary><span>'+c.name+'</span><span class="category-count" aria-hidden="true">'+c.items.length+'</span></summary><div class="category-links'+(c.groups?' grouped-menu':'')+'">'+groupedLinks(c)+'</div></details>').join('')+'</section>';
+const choices='<section class="landing-section choosing-tools"><h2>'+lr(68)+'</h2><div><article><h3>'+lr(69)+'</h3><p>'+lr(70)+'</p><a href="/image-compressor">Image Compressor</a> · <a href="/image-resizer">Image Resizer</a></article><article><h3>'+lr(71)+'</h3><p>'+lr(72)+'</p><a href="/extract-pdf-pages">Extract PDF pages</a> · <a href="/split-pdf">Split PDF</a></article></div></section>';
+const examples='<section class="landing-section"><div class="section-heading"><h2>'+lr(19)+'</h2><p>'+lr(20)+'</p></div><div class="landing-examples">'+[['jpg-to-pdf',21,'JPG to PDF'],['image-compressor',22,'IMAGE'],['compress-pdf',23,'PDF']].map(([slug,n,badge])=>'<a href="/'+slug+'"><span class="example-type" aria-hidden="true">'+badge+'</span><h3>'+lr(n)+'</h3></a>').join('')+'</div></section>';
+// Optional manual placement; publisher ID alone is not an ad-unit ID.
+const homeAdSlot=(process.env.ADSENSE_HOME_SLOT||'').trim();
+if(homeAdSlot&&!/^\d{10}$/.test(homeAdSlot))throw new Error('ADSENSE_HOME_SLOT must be a 10-digit AdSense display ad-unit ID');
+const homeAd=homeAdSlot?'<aside class="home-ad" aria-label="Advertisement"><span class="home-ad-label">Advertisement</span><ins class="adsbygoogle" data-home-ad data-ad-client="ca-pub-6110796878581495" data-ad-slot="'+homeAdSlot+'"></ins></aside>':'';
+let home=shell(landingRows[0][0],landingRows[1][0],'');home=home.replace('</head>','<link rel="stylesheet" href="/home.css"></head>').replace('<body>','<body class="landing">').replace(/<main>[\s\S]*?<\/main>/,'<main>'+hero+quickHtml+'<div class="home-directory">'+browse+'</div>'+homeAd+'<details class="home-notes"><summary>'+homeText(7)+'</summary><div class="home-evidence">'+proof+examples+'</div>'+choices+'</details></main>');
 await writeFile(out+'/index.html',home);
 const decisionGuide=slug=>{const sections={'image-compressor':[[1,2],[3,4],[5,6]],'compress-pdf':[[7,8],[9,10]],'jpg-to-pdf':[[11,12],[13,14]]}[slug];return sections?'<section class="decision-guide" id="settings-guide"><h2>'+lr(48)+'</h2>'+sections.map(([h,p])=>'<article><h3>'+lr(48+h)+'</h3><p>'+lr(48+p)+'</p></article>').join('')+'</section>':'';};
 const toolFacts=t=>{if(t.type!=='convert'||t.slug==='merge-pdf')return '';const input=facts.formats[t.input]||label(t.input),output=facts.outputs[t.output]||label(t.output);return '<section class="tool-facts"><h2>'+escape(facts.title)+'</h2><dl><div><dt>'+escape(facts.input)+'</dt><dd>'+escape(input)+'</dd></div><div><dt>'+escape(facts.output)+'</dt><dd>'+escape(output)+'</dd></div><div><dt>'+escape(facts.limits)+'</dt><dd><p>'+escape(facts.batch)+'</p>'+(t.input==='pdf'?'<p>'+escape(facts.range)+'</p>':'')+'</dd></div></dl></section>';};
@@ -85,12 +102,13 @@ for(const t of tools){
   html=html.replace('<div class="qr-settings"><label><input id="image-remove"','<div class="qr-settings" hidden><label><input id="image-remove"');
   html=html.replace(/<p>Click the original image[\s\S]*?<\/p><p>For solid backgrounds[\s\S]*?<\/p>/,'');
  }
+ const hasRasterExample=Boolean(rasterExample(t.slug));
  const steps=t.type==='pdfcompress'?pdfCompressRows.slice(21,24).map(r=>r[0]):t.type==='html'?htmlRows.slice(23,26).map(r=>r[0]):t.type==='gif'?gifRows.slice(24,27).map(r=>r[0]):guideSteps(t)||(t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
  :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.']);
  const preferred=t.type==='pdfcompress'?['merge-pdf','split-pdf','extract-pdf-pages']:t.input==='pdf'&&t.type!=='heic'?['compress-pdf','merge-pdf','extract-pdf-pages','split-pdf']:t.type==='heic'?['image-compressor','jpg-to-pdf','image-resizer']:t.type==='pdfedit'?['merge-pdf','extract-pdf-pages','split-pdf','rotate-pdf']:t.type==='qr'?['wifi-qr','qr-generator','qr-reader']:t.slug==='image-compressor'?['image-resizer','jpg-to-pdf','heic-to-jpg']:[];
  const reverse=tools.find(x=>t.input&&x.input===t.output&&x.output===t.input&&x.slug!==t.slug);
  const related=[...new Set([...preferred,...(reverse?[reverse.slug]:[]),...tools.filter(x=>t.input&&x.input===t.input).map(x=>x.slug),'image-compressor','image-resizer'])].filter(slug=>slug!==t.slug).slice(0,4).map(slug=>tools.find(t=>t.slug===slug));
- html=html.replace('</main>',toolFacts(t)+decisionGuide(t.slug)+practicalGuide(t.slug)+'<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.slug==='merge-pdf'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
+ html=html.replace('</main>',rasterExample(t.slug)+(hasRasterExample?'':toolFacts(t))+decisionGuide(t.slug)+practicalGuide(t.slug)+'<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol>'+(hasRasterExample?'':'<h2>Output and limitations</h2><p>'+escape(t.note)+'</p>')+(t.slug==='merge-pdf'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
  html=html.replace(/<script type="module" src="[^"]+"><\/script>/,'<script type="module" src="/site.js"></script>');

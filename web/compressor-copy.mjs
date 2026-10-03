@@ -84,10 +84,10 @@ export const compressorRows=[
     "未比原图更小。请尝试WEBP或允许缩小尺寸。"
   ],
   [
-    "Original: {0} KB → Result: {1} KB · {2} × {3} px",
-    "원본: {0} KB → 결과: {1} KB · {2} × {3} px",
-    "元画像: {0} KB → 結果: {1} KB · {2} × {3} px",
-    "原图: {0} KB → 结果: {1} KB · {2} × {3} px"
+    "Original: {0} KB, Result: {1} KB · {2} × {3} px",
+    "원본: {0} KB, 결과: {1} KB · {2} × {3} px",
+    "元画像: {0} KB, 結果: {1} KB · {2} × {3} px",
+    "原图: {0} KB, 结果: {1} KB · {2} × {3} px"
   ],
   [
     "1 KB = 1,000 bytes. PNG reduces size by resizing; JPG and WEBP can also reduce quality.",

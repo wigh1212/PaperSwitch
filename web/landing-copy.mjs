@@ -1,15 +1,15 @@
-export const landingRows = [
+export const landingRows=[
   [
-    "Your files. A little simpler.",
-    "파일 작업, 가볍고 간편하게.",
-    "ファイル作業を、もっと手軽に。",
-    "文件处理，轻松一点。"
+    "A place to sort out your files.",
+    "파일을 바꾸고, 정리하는 곳.",
+    "ファイルを変えて、整える場所。",
+    "转换文件，整理妥当。"
   ],
   [
-    "Convert, compress and create. Pick a tool and get straight to your work.",
-    "변환부터 압축, QR 만들기까지. 필요한 도구를 골라 바로 시작하세요.",
-    "変換、圧縮、QR作成。必要なツールを選んで、すぐに始めましょう。",
-    "转换、压缩、制作二维码。选择工具，即刻开始。"
+    "Convert a photo, combine documents or reduce an attachment. Start with the file task you need.",
+    "사진 형식을 바꾸거나, 문서를 합치거나, 첨부 용량을 줄일 때. 지금 필요한 작업을 선택하세요.",
+    "写真の形式変更、文書の結合、添付ファイルの圧縮。必要な作業から始めてください。",
+    "转换照片格式、合并文档，或缩小附件。选择眼前需要的工具。"
   ],
   [
     "PDF tools",
@@ -30,46 +30,46 @@ export const landingRows = [
     "二维码 · GIF"
   ],
   [
-    "Everyday files, sorted",
-    "일상 속 파일 작업을 한곳에서",
-    "日々のファイル作業をひとつに",
-    "日常文件工具，一站齐全"
+    "Small tools for everyday files",
+    "파일을 다루는 작은 도구들",
+    "日々のファイルに、小さな道具を",
+    "处理日常文件的小工具"
   ],
   [
-    "Find a tool",
-    "도구 찾아보기",
-    "ツールを探す",
-    "查找工具"
+    "See all tools",
+    "전체 도구 보기",
+    "すべてのツール",
+    "查看全部工具"
   ],
   [
     "Start with JPG to PDF",
-    "JPG → PDF 바로 시작",
-    "JPG → PDFを始める",
-    "开始 JPG → PDF"
+    "JPG PDF 변환 시작",
+    "JPGからPDFへの変換を始める",
+    "开始将JPG转换为PDF"
   ],
   [
-    "A good place to start",
-    "자주 쓰는 작업부터",
-    "よく使う作業から",
-    "从常用工具开始"
+    "Start here",
+    "바로 시작하기",
+    "ここから始める",
+    "从这里开始"
   ],
   [
-    "Six shortcuts for everyday tasks.",
-    "복잡한 설정 없이, 필요한 작업으로 바로 이동하세요.",
-    "必要な作業へ、すぐにアクセス。",
-    "直达所需工具，轻松开始。"
+    "The everyday essentials",
+    "자주 필요한 여섯 가지 작업",
+    "よく使う6つの作業",
+    "常用的六项操作"
   ],
   [
-    "All tools, three simple groups",
-    "전체 도구, 세 가지 분류",
-    "すべてのツールを3つの分類で",
-    "所有工具，三大分类"
+    "All tools",
+    "전체 도구",
+    "すべてのツール",
+    "全部工具"
   ],
   [
-    "Open a group to explore every tool.",
-    "분류를 펼치면 모든 도구를 확인할 수 있어요.",
-    "分類を開くと、すべてのツールが見つかります。",
-    "展开分类，浏览全部工具。"
+    "Browse by the file you have.",
+    "다루려는 파일에 맞춰 찾아보세요.",
+    "手元のファイルに合わせて探せます。",
+    "按手头的文件查找。"
   ],
   [
     "From file to finished",
@@ -114,16 +114,16 @@ export const landingRows = [
     "如有预览，请检查结果，并在关闭页面前下载。"
   ],
   [
-    "See what changes before you start",
-    "시작 전에 결과를 살펴보세요",
-    "始める前に仕上がりを確認",
-    "开始前，先了解转换效果"
+    "More examples",
+    "다른 변환 예시",
+    "ほかの変換例",
+    "其他转换示例"
   ],
   [
-    "Real examples, settings and limitations are included in these guides.",
-    "실제 변환 예시와 설정, 알아둘 제한 사항을 함께 안내합니다.",
-    "実際の変換例、設定、制限事項を紹介しています。",
-    "查看真实转换示例、设置和限制。"
+    "Source files and results you can download.",
+    "원본과 결과를 내려받아 살펴볼 수 있습니다.",
+    "元ファイルと結果を保存して確認できます。",
+    "可下载原文件与结果进行查看。"
   ],
   [
     "Photos into a document",
@@ -376,5 +376,79 @@ export const landingRows = [
     "PDF 파일은 원본 JPG보다 클 수 있습니다. 제출 용량을 줄여야 한다면 사진 사본을 먼저 압축한 뒤 PDF를 다시 만드세요. 작은 글자가 읽힐 만큼 해상도를 유지하고 최종 파일이 제출처의 제한에 맞는지 확인하세요.",
     "PDFは元のJPGより大きくなる場合があります。容量を減らすには写真のコピーを先に圧縮してからPDFを作り直してください。小さな文字を読める解像度を保ち、提出先の制限を確認します。",
     "PDF可能比原JPG更大。如需减小提交文件，请先压缩照片副本再重新生成PDF。保留足够分辨率以看清小字，并确认最终文件符合接收方限制。"
+  ],
+  [
+    "The background changes, too",
+    "배경도 함께 바뀝니다",
+    "背景も変わります",
+    "背景也会改变"
+  ],
+  [
+    "PNG to JPG. This tool turns transparent areas white.",
+    "PNG를 JPG로 변환하면 투명한 부분을 흰색으로 저장합니다.",
+    "PNGからJPGへの変換では、透明部分を白にします。",
+    "将PNG转换为JPG时，此工具将透明部分保存为白色。"
+  ],
+  [
+    "Compare the original and result",
+    "원본과 결과 자세히 보기",
+    "元画像と結果を詳しく見る",
+    "查看原图与结果"
+  ],
+  [
+    "Source PNG",
+    "원본 PNG",
+    "元のPNG",
+    "原始PNG"
+  ],
+  [
+    "Output JPG",
+    "변환한 JPG",
+    "変換後のJPG",
+    "转换后的JPG"
+  ],
+  [
+    "Not sure which tool to choose?",
+    "비슷한 도구, 이렇게 고르세요",
+    "似たツールの選び方",
+    "相似工具怎么选？"
+  ],
+  [
+    "The file is too large to attach",
+    "첨부하려는데 용량이 클 때",
+    "添付するには容量が大きい",
+    "附件文件太大"
+  ],
+  [
+    "Use Image Compressor for a KB limit. Use Image Resizer when a form asks for a specific width and height in pixels.",
+    "KB 제한에 맞추려면 이미지 용량 줄이기를, 가로·세로 픽셀을 맞추려면 이미지 크기 조절을 선택하세요.",
+    "KBの上限には画像圧縮、指定の幅・高さには画像サイズ変更を使います。",
+    "要符合KB上限用图片压缩，要指定宽高像素用图片尺寸调整。"
+  ],
+  [
+    "You only need part of a PDF",
+    "PDF에서 일부만 필요할 때",
+    "PDFの一部だけ必要なとき",
+    "只需要PDF中的一部分"
+  ],
+  [
+    "Extract pages to keep selected pages in one document. Split PDF to save several smaller documents.",
+    "선택한 페이지만 한 문서로 남기려면 페이지 추출을, 여러 작은 문서로 나누려면 PDF 분할을 선택하세요.",
+    "選んだページを1つに残すならページ抽出、複数の文書に分けるならPDF分割を使います。",
+    "所选页面保留在一个文档用页面提取，保存为多个小文档用PDF拆分。"
   ]
 ];
+
+landingRows.push(["Advertisement", "광고", "広告", "广告"]);
+
+export const homeUiRows = [
+ ['PDFs, images and QR codes. Pick a tool to get started.', 'PDF, 이미지, QR. 필요한 도구로 바로 시작하세요.', 'PDF、画像、QR。必要なツールから始めましょう。', 'PDF、图片、二维码。选一个工具，马上开始。'],
+ ['Photo to PDF', '사진을 PDF로', '写真をPDFに', '照片转PDF'],
+ ['PDF to images', 'PDF를 이미지로', 'PDFを画像に', 'PDF转图片'],
+ ['Compress an image', '이미지 압축', '画像を圧縮', '压缩图片'],
+ ['Combine PDFs', 'PDF 합치기', 'PDFを結合', '合并PDF'],
+ ['Convert HEIC', 'HEIC 변환', 'HEICを変換', '转换HEIC'],
+ ['Make a QR code', 'QR 만들기', 'QRを作成', '制作二维码'],
+ ['Conversion notes and examples', '변환 안내와 실제 결과', '変換のヒントと実例', '转换说明与实际效果']
+];
+landingRows.push(...homeUiRows);

@@ -1,3 +1,4 @@
+import {editorialCopy} from './editorial-copy.mjs';
 import {pdfCompressRows} from './pdf-compress-copy.mjs';
 import {htmlRows} from './html-copy.mjs';
 import {gifRows} from './gif-copy.mjs';
@@ -5,6 +6,7 @@ import {growthEntries} from './growth-copy.mjs';
 import {compressorRows} from './compressor-copy.mjs';
 // Four columns: English, Korean, Japanese, Simplified Chinese.
 export function searchCopy(t){
+ const editorial=editorialCopy(t);if(editorial)return editorial;
  if(t.type==="pdfcompress")return {title:pdfCompressRows[0],description:pdfCompressRows[1],use:pdfCompressRows[28],how:["How it works","사용 방법","使い方","使用方法"]};
  if(t.type==="html")return {title:htmlRows[0],description:htmlRows[1],use:htmlRows[26],how:["How it works","사용 방법","使い方","使用方法"]};
  if(t.type==="gif")return {title:gifRows[0],description:gifRows[1],use:gifRows[30],how:["How it works","사용 방법","使い方","使用方法"]};
@@ -12,22 +14,7 @@ export function searchCopy(t){
  const entry=growthEntries.find(e=>e[0]===t.slug);if(entry)return {title:entry.slice(1,5),description:entry.slice(5,9),use:entry.slice(5,9),how:['How it works','사용 방법','使い方','使用方法']};
  const a=t.input?.toUpperCase(),b=t.output?.toUpperCase();
  let title,description,use;
- if(t.slug.includes('-to-')){
-  title=[a+' to '+b+' Converter – Free Online',a+' '+b+' 변환 – 무료 온라인 변환기',a+' '+b+' 変換 – 無料オンラインツール',a+'转'+b+' – 免费在线转换'];
-  description=['Convert '+a+' to '+b+' online for free. Choose files, review the options and download the results. Files are processed in your browser; no signup required.',a+' 파일을 '+b+'로 무료 변환하세요. 파일 선택 후 옵션을 확인하고 결과를 다운로드할 수 있습니다. 회원가입 없이 브라우저에서 파일을 처리합니다。'.replace('。','.'),a+'を'+b+'に無料で変換。ファイルを選び、設定を確認して結果をダウンロードできます。登録不要で、ブラウザー内でファイルを処理します。','免费将'+a+'转换为'+b+'。选择文件、检查选项后下载结果。无需注册，文件在浏览器中处理。'];
-  use=['Use '+b+' files when your destination application does not accept '+a+'. Review the output limitations below before converting.',a+'를 지원하지 않는 프로그램이나 제출 양식에서 '+b+' 파일이 필요할 때 사용하세요. 변환 전에 아래의 출력 형식과 제한 사항을 확인하세요。'.replace('。','.'),a+'に対応していないアプリや提出先で'+b+'が必要なときに使えます。変換前に以下の出力と制限事項を確認してください。','当应用或提交表单不支持'+a+'、需要'+b+'时使用。转换前请查看下方的输出说明与限制。'];
-  if(t.output==='pdf'&&t.input!=='txt'){
-   title=[a+' to PDF Converter – Free Image to PDF',a+' PDF 변환 – 이미지를 PDF로 무료 변환',a+' PDF 変換 – 画像を無料でPDFに',a+'转PDF – 免费图片转PDF'];
-   description=['Convert '+a+' images to PDF for free. Save separate PDFs or combine images in your chosen order. No signup or conversion-server upload.',a+' 이미지를 PDF로 무료 변환하세요. 개별 PDF로 저장하거나 순서대로 하나의 PDF로 모을 수 있습니다. 회원가입과 변환 서버 업로드가 필요 없습니다.',a+'画像を無料でPDFに変換。個別のPDFとして保存するか、選んだ順番で1つにまとめられます。登録や変換サーバーへのアップロードは不要です。','免费将'+a+'图片转为PDF。可分别保存，也可按所选顺序合成一个PDF。无需注册或上传到转换服务器。'];
-   use=['Keep receipts, photographed notes or image documents together in a PDF for sharing. Image text remains an image rather than editable document text.','영수증, 촬영한 필기, 이미지 문서를 PDF로 모아 공유할 때 유용합니다. 이미지 속 글자는 편집 가능한 문서 텍스트로 바뀌지 않습니다.','領収書、撮影したノート、画像文書をPDFにまとめて共有できます。画像内の文字は編集可能な文書テキストにはなりません。','适合将收据、拍摄的笔记或图片文档整理为PDF进行分享。图片中的文字不会变成可编辑的文档文字。'];
-  }else if(t.input==='pdf'&&['jpg','png','webp','tiff'].includes(t.output)){
-   title=['PDF to '+b+' Converter – Save PDF Pages as Images','PDF '+b+' 변환 – PDF를 이미지로 무료 저장','PDF '+b+' 変換 – ページを無料で画像保存','PDF转'+b+' – 免费将PDF页面保存为图片'];
-   use=['Turn PDF pages into images for presentations or documents that accept pictures. The result does not retain selectable text; keep your original PDF.','PDF 페이지를 발표 자료나 이미지 첨부가 필요한 문서에 사용할 때 편리합니다. 결과에서는 글자를 선택할 수 없으므로 원본 PDF를 보관하세요.','PDFのページをプレゼン資料や画像を添付する文書に使えます。出力では文字を選択できないため、元のPDFを保管してください。','适合将PDF页面用于演示文稿或需要图片的文档。结果不保留可选文字，请保留原PDF。'];
-  }else if(t.slug==='pdf-to-txt'){
-   title=['PDF to Text – Free Text Extraction and OCR','PDF 텍스트 추출 – 스캔 PDF OCR 무료 변환','PDF テキスト抽出 – スキャンPDFの無料OCR','PDF转文字 – 免费文本提取与扫描件OCR'];
-   use=['Extract text to copy into notes or search in a text editor. For scanned pages, choose the OCR language and check recognition errors before reusing the text.','PDF 내용을 메모에 복사하거나 텍스트 편집기에서 검색할 때 사용하세요. 스캔 페이지는 OCR 언어를 선택하고 추출한 글자의 오인식을 확인하세요.','PDFの内容をメモにコピーしたり、テキストエディターで検索できます。スキャンページではOCR言語を選び、抽出した文字の誤認識を確認してください。','适合将PDF内容复制到笔记或在文本编辑器中搜索。扫描页请选择OCR语言，并检查识别错误。'];
-  }
- }else{
+ {
   const special={
    'merge-pdf':[
     ['Merge PDF – Combine PDF Files Free Online','PDF 합치기 – 여러 PDF 파일 무료 병합','PDF 結合 – 複数のPDFを無料でまとめる','PDF合并 – 免费在线合并多个PDF'],

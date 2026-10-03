@@ -127,8 +127,8 @@ export const practicalRows=[
   ],
   [
     "Choose JPG for a website or app that cannot open iPhone HEIC photos. This tool keeps the decoded pixel dimensions and exports JPG at its preset quality. If you want PNG output instead, use HEIC to PNG. Convert first, then compress only if the receiving service needs a smaller file.",
-    "아이폰 HEIC 사진을 열지 못하는 사이트나 앱에는 JPG를 사용하세요. 이 도구는 디코딩한 픽셀 크기를 유지하고 정해진 JPG 품질로 저장합니다. PNG가 필요하면 HEIC→PNG를 사용하세요. 먼저 변환하고 제출처의 용량 제한이 있을 때만 추가로 압축하세요.",
-    "iPhoneのHEIC写真を開けないサイトやアプリにはJPGを使います。復号した画素寸法を保ち、設定済みのJPG品質で保存します。PNGが必要ならHEIC→PNGを選び、容量制限がある場合だけ変換後に圧縮してください。",
+    "아이폰 HEIC 사진을 열지 못하는 사이트나 앱에는 JPG를 사용하세요. 이 도구는 디코딩한 픽셀 크기를 유지하고 정해진 JPG 품질로 저장합니다. PNG가 필요하면 HEIC PNG 변환을 사용하세요. 먼저 변환하고 제출처의 용량 제한이 있을 때만 추가로 압축하세요.",
+    "iPhoneのHEIC写真を開けないサイトやアプリにはJPGを使います。復号した画素寸法を保ち、設定済みのJPG品質で保存します。PNGが必要ならHEICからPNGへの変換を選び、容量制限がある場合だけ変換後に圧縮してください。",
     "网站或应用无法打开iPhone HEIC照片时可用JPG。本工具保留解码后的像素尺寸，以预设JPG质量导出。需要PNG时使用HEIC转PNG，仅在提交方限制大小时再压缩。"
   ],
   [

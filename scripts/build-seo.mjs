@@ -1,3 +1,4 @@
+import {rasterExampleRows} from '../web/raster-example-copy.mjs';
 import {serviceRows} from '../web/service-content.mjs';
 import {factRows} from '../web/tool-facts.mjs';
 import {landingRows} from '../web/landing-copy.mjs';
@@ -19,7 +20,7 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
 const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms'];
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
@@ -60,7 +61,7 @@ for(const base of routes){
    if(guide&&questions.length)append(guide,'<section class="faq"><h2>Common questions</h2>'+questions.map(([q,a])=>'<h3>'+esc(q)+'</h3><p>'+esc(a)+'</p>').join('')+'</section>');
    if(tool.type==='convert'){
     const input=find(doc,n=>attr(n,'id')==='file');set(input,'accept',tool.input==='jpg'?'.jpg,.jpeg':tool.input==='tiff'?'.tif,.tiff':'.'+tool.input);
-    text(find(doc,n=>attr(n,'id')==='convert'),tool.slug==='merge-pdf'?'Merge PDFs ↗':tool.output.toUpperCase()+'로 변환 ↗');
+    text(find(doc,n=>attr(n,'id')==='convert'),tool.slug==='merge-pdf'?'Merge PDFs':tool.output.toUpperCase()+'로 변환');
     text(find(doc,n=>attr(n,'id')==='accept-hint'),tool.input.toUpperCase()+' · 최대 20개 · 파일당 50 MB · 합계 100 MB');
    }
   }

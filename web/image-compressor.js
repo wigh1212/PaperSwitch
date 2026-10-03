@@ -28,7 +28,7 @@ $('run').onclick=async()=>{
  if(job!==revision)return;
  url=URL.createObjectURL(best.blob);const image=new Image();image.src=url;image.alt='';$('result').append(image);$('download').href=url;
  $('download').download=inputFile.name.replace(/\.[^.]+$/,'')+'-compressed.'+({'image/jpeg':'jpg','image/webp':'webp','image/png':'png'}[type]);$('download').hidden=false;
- setText($('stats'),'Original: '+(inputFile.size/1000).toFixed(1)+' KB → Result: '+(best.blob.size/1000).toFixed(1)+' KB · '+best.width+' × '+best.height+' px');
+ setText($('stats'),'Original: '+(inputFile.size/1000).toFixed(1)+' KB, Result: '+(best.blob.size/1000).toFixed(1)+' KB · '+best.width+' × '+best.height+' px');
  setText($('status'),best.blob.size>target?'Target not reached. Allow smaller dimensions or increase the target.':best.blob.size>=inputFile.size?'No size saving. Try WEBP or allow smaller dimensions.':'Target reached. Review the image before downloading.');
  }catch(e){if(job===revision)setText($('status'),e.message);}finally{if(job===revision)$('controls').disabled=false;}
 };
