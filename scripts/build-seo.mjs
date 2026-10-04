@@ -1,3 +1,5 @@
+import {vectorExampleRows} from '../web/vector-example-copy.mjs';
+import {indexableRoutes} from '../web/routes.mjs';
 import {rasterExampleRows} from '../web/raster-example-copy.mjs';
 import {serviceRows} from '../web/service-content.mjs';
 import {factRows} from '../web/tool-facts.mjs';
@@ -20,9 +22,9 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(vectorExampleRows);registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
-const routes=['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms'];
+const routes=indexableRoutes;
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
 function set(n,k,v){n.attrs??=[];const a=n.attrs.find(a=>a.name===k);if(a)a.value=v;else n.attrs.push({name:k,value:v});}
 function walk(n,fn){fn(n);for(const child of n.childNodes||[])walk(child,fn);}

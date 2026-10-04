@@ -33,3 +33,20 @@ test('root domain allows ads.txt discovery and redirects pages to the canonical 
 });
 
 test('known aliases normalize path and host in one worker redirect',async()=>{for(const host of ['https://saerokbit.com','https://www.paperswitch.saerokbit.com','http://paperswitch.saerokbit.com']){const r=await worker.fetch(new Request(host+'/ko/terms.html?from=audit'),env);assert.equal(r.status,301);assert.equal(r.headers.get('location'),origin+'/ko/terms?from=audit');}});
+
+
+test('preview strips only site ads, while public HTML retains them',async()=>{
+ const html='<html><head><script data-site-ad="" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6110796878581495"></script></head><body><main>Tool</main><aside class="home-ad"><span>Advertisement</span><ins data-home-ad></ins></aside><script type="module" src="/site.js"></script></body></html>';
+ const htmlEnv={ASSETS:{fetch:async()=>new Response(html,{headers:{'content-type':'text/html','etag':'old','content-length':String(html.length)}})}};
+ const preview=await worker.fetch(new Request('https://test.workers.dev/ko/'),htmlEnv),body=await preview.text();
+ assert.doesNotMatch(body,/adsbygoogle|data-home-ad/);assert.match(body,/<main>Tool<\/main>/);assert.match(body,/src="\/site.js"/);
+ assert.equal(preview.headers.get('x-robots-tag'),'noindex');assert.equal(preview.headers.get('etag'),null);assert.equal(preview.headers.get('content-length'),null);assert.equal(preview.headers.get('cache-control'),'no-store');
+ const prod=await worker.fetch(new Request(origin+'/ko/'),htmlEnv);assert.equal(await prod.text(),html);
+});
+
+test('canonical variants redirect once, canonical URLs do not redirect',async()=>{
+ for(const [path,target] of [['/ko','/ko/'],['/ko/index.html','/ko/'],['/en/','/'],['/index.html','/'],['/ko/webp-to-jpg/','/ko/webp-to-jpg'],['/ja/about.html','/ja/about'],['/ZH-CN/terms/','/zh-cn/terms']]){
+  const r=await worker.fetch(new Request(origin+path+'?ref=test'),env);assert.equal(r.status,301,path);assert.equal(r.headers.get('location'),origin+target+'?ref=test');
+  assert.equal((await worker.fetch(new Request(origin+target),env)).status,200,target);
+ }
+});

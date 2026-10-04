@@ -17,6 +17,7 @@ import {rows} from '/copy.js';
 registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
 registerTranslations(seoRows);
 registerTranslations(searchRows);
+if(document.body.dataset.tool==='svg-to-png')registerTranslations((await import('/vector-example-copy.js')).vectorExampleRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);
 const menus=[...document.querySelectorAll('.format-menu')];
 const closeMenus=except=>menus.forEach(menu=>{if(menu!==except)menu.open=false;});

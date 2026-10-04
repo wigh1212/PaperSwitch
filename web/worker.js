@@ -1,6 +1,7 @@
-import {tools} from './tools.mjs';
+import {indexableRoutes} from './routes.mjs';
+import {withoutPreviewAds} from './preview-ads.mjs';
 import {SITE_ORIGIN,locales,localizedPath,splitPath} from './seo-config.mjs';
-const routes=new Set(['/',...tools.map(t=>'/'+t.slug),'/about','/contact','/privacy','/terms']);
+const routes=new Set(indexableRoutes);
 export default {
  async fetch(request,env){
   const url=new URL(request.url),primary=new URL(SITE_ORIGIN);
@@ -22,7 +23,9 @@ export default {
   if(routes.has(base)&&url.pathname!==canonicalPath){url.pathname=canonicalPath;return Response.redirect(url.href,301);}
   const response=await env.ASSETS.fetch(request);
   if(preview||url.pathname.startsWith('/assets/')||response.status===404){
-   const updated=new Response(response.body,response);updated.headers.set('X-Robots-Tag','noindex');return updated;
+   const isHTML=preview&&response.headers.get('content-type')?.includes('text/html');
+   const updated=new Response(isHTML?withoutPreviewAds(await response.text()):response.body,response);
+   if(isHTML){updated.headers.delete('content-length');updated.headers.delete('etag');updated.headers.set('Cache-Control','no-store');}updated.headers.set('X-Robots-Tag','noindex');return updated;
   }
   return response;
  }

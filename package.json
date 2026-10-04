@@ -23,7 +23,10 @@
     "test:web:pdf-compress": "node tests/web-pdf-compress.mjs",
     "test:web:practical-guides": "node tests/web-practical-guides.mjs",
     "test:site-audit": "node tests/site-audit.mjs",
-    "test:web:site-audit": "node tests/web-site-audit.mjs"
+    "test:web:site-audit": "node tests/web-site-audit.mjs",
+    "seo:check": "node tests/site-audit.mjs && node --test tests/sitemaps.test.mjs tests/worker-indexing.test.mjs",
+    "seo:live": "node scripts/check-live-seo.mjs",
+    "check:syntax": "node scripts/check-syntax.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",

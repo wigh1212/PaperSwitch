@@ -78,6 +78,44 @@ const descriptions={
     "将UTF-8文字排入A4 PDF并自动换行。纯文本不含原文档的表格或图片。"
   ]
 };
+Object.assign(descriptions,{
+  "svg-to-png": [
+    "Render SVG artwork into PNG at 1, 2 or 3 times its dimensions. The sample below shows the pixel-size and file-size tradeoff; transparent areas become white.",
+    "SVG 도형을 원본 크기의 1배·2배·3배 PNG로 그립니다. 아래 실제 예시로 픽셀 크기와 용량 차이를 확인하세요. 투명 영역은 흰색으로 바뀝니다.",
+    "SVGを1倍・2倍・3倍の寸法でPNGに描画します。下の実例で画素寸法と容量の違いを確認できます。透明部分は白になります。",
+    "以原始尺寸的1、2或3倍将SVG绘制为PNG。下方实例展示像素尺寸与文件大小的差异，透明部分变为白色。"
+  ],
+  "svg-to-jpg": [
+    "Make a white-background JPEG from an SVG logo or illustration. Choose the pixel scale before export and inspect thin lines: JPG compression can soften their edges.",
+    "SVG 로고나 일러스트를 흰 배경의 JPEG로 저장합니다. 변환 전에 픽셀 배율을 고르고, JPG 압축으로 경계가 흐려질 수 있는 가는 선을 확인하세요.",
+    "SVGロゴやイラストを白背景のJPEGにします。出力前に倍率を選び、JPG圧縮で輪郭がにじむ場合がある細線を確認してください。",
+    "将SVG标志或插图保存为白底JPEG。导出前选择像素倍率，并检查细线，JPG压缩可能使边缘模糊。"
+  ],
+  "svg-to-pdf": [
+    "Put SVG artwork on a PDF page for document workflows. This uses a different renderer from PNG export; compare fonts, clipping and filters with the original SVG.",
+    "문서 작업에 쓸 SVG 그림을 PDF 페이지에 담습니다. PNG 출력과 다른 렌더러를 사용하므로 글꼴·잘린 영역·필터 표현을 원본 SVG와 비교하세요.",
+    "文書用途にSVGをPDFページへ配置します。PNG出力とは異なる描画処理のため、フォント、クリッピング、フィルターを元のSVGと比較してください。",
+    "将SVG图形放入PDF页面用于文档流程。其渲染器与PNG导出不同，请与原SVG比较字体、裁剪和滤镜。"
+  ],
+  "tiff-to-pdf": [
+    "Turn a multipage TIFF scan into a PDF while keeping its page sequence. Each TIFF page becomes a PDF page; scanned text remains an image, without a searchable OCR layer.",
+    "여러 페이지 TIFF 스캔을 페이지 순서대로 PDF에 담습니다. TIFF 한 페이지가 PDF 한 페이지가 되며, 스캔 글자는 검색 가능한 OCR 텍스트가 아닌 이미지로 남습니다.",
+    "複数ページのTIFFスキャンをページ順のままPDFにします。TIFFの各ページがPDFの1ページになり、文字は検索可能なOCR層ではなく画像のままです。",
+    "按原有页序将多页TIFF扫描件转换为PDF。每个TIFF页面成为一页PDF，扫描文字仍是图片，不包含可搜索的OCR文字层。"
+  ],
+  "tiff-to-png": [
+    "Extract each TIFF page as a separate PNG. A multipage scan produces several files, available together as a ZIP; use TIFF to PDF if you need one paged document.",
+    "TIFF의 각 페이지를 별도 PNG로 저장합니다. 여러 페이지 스캔은 여러 파일로 나오며 ZIP으로 함께 받을 수 있습니다. 한 문서가 필요하면 TIFF PDF 변환을 이용하세요.",
+    "TIFFの各ページを個別PNGにします。複数ページなら複数ファイルとなり、ZIPでまとめて保存できます。1つの文書が必要ならTIFFからPDFへの変換を使います。",
+    "将TIFF每页保存为独立PNG。多页扫描件会生成多个文件，可一起下载为ZIP；如需一个分页文档，请转换为PDF。"
+  ],
+  "webp-to-png": [
+    "Save a WEBP as PNG for an application that does not accept WEBP. This converter exports a still image on white; it does not preserve transparency or animation.",
+    "WEBP를 받지 않는 프로그램에 사용할 PNG를 만듭니다. 이 변환기는 흰 배경의 정지 이미지를 저장하므로 투명도와 애니메이션은 유지하지 않습니다.",
+    "WEBP非対応のアプリ向けにPNGを作ります。この変換では白背景の静止画となり、透明度やアニメーションは保持しません。",
+    "为不支持WEBP的应用生成PNG。本转换器导出白底静态图片，不保留透明度或动画。"
+  ]
+});
 const tails={
   "png": [
     "Save {a} as PNG. Check the rendered pixels rather than expecting the conversion to restore lost detail.",
