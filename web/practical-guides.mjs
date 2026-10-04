@@ -36,12 +36,6 @@ export const practicalRows=[
     "这些数值来自一个测试文件，不保证所有文件都有相同结果。1 KB = 1,000字节。"
   ],
   [
-    "Measured with Paper Switch in Chromium on 22 September 2026.",
-    "2026년 9월 22일 Chromium에서 Paper Switch로 측정했습니다.",
-    "2026年9月22日にChromium上のPaper Switchで測定しました。",
-    "于2026年9月22日在Chromium中使用Paper Switch测量。"
-  ],
-  [
     "Public HEIC test file from libheif",
     "libheif 공개 HEIC 테스트 파일",
     "libheifの公開HEICテストファイル",
@@ -84,10 +78,10 @@ export const practicalRows=[
     "JPG不保留可选择文字、链接或透明背景。需要搜索和复制文字时请保留PDF。若扫描原件模糊，提高导出分辨率也无法恢复丢失的细节。"
   ],
   [
-    "This three-page sample contains text and repeated vector table rows. The input was deliberately saved without stream compression. It illustrates a favorable case, not a typical compression rate for scanned PDFs.",
-    "이 3페이지 샘플에는 글자와 반복되는 벡터 표가 들어 있습니다. 내부 데이터 압축 없이 저장한 파일이므로 용량이 잘 줄어드는 사례이며, 스캔 PDF의 일반적인 압축률을 뜻하지 않습니다.",
-    "3ページのサンプルには文字と繰り返しのベクター表が含まれ、内部圧縮なしで保存しています。圧縮が効きやすい例であり、スキャンPDFの一般的な削減率ではありません。",
-    "三页示例包含文字和重复的矢量表格，输入文件特意未压缩内部数据。这是较容易压缩的案例，不代表扫描PDF的普遍压缩率。"
+    "A three-page workshop plan with a schedule, checklist and budget. Compare the first-page excerpts below: the words and table stay the same after compression.",
+    "일정표·준비물·예산이 담긴 3페이지 문서입니다. 아래 첫 페이지 일부를 비교해 보세요. 압축 후에도 글자와 표는 그대로입니다.",
+    "日程、持ち物、予算をまとめた3ページの文書です。以下の1ページ目の抜粋を比較してください。圧縮後も文字と表は同じです。",
+    "这份三页文档包含日程、物品清单和预算。请比较下方第一页的局部，压缩后的文字与表格保持不变。"
   ],
   [
     "Use this quality-first mode for reports with small text or diagrams. It does not lower image resolution or turn pages into pictures. Check the result size: if no space is saved, the download is the unchanged original.",
@@ -136,9 +130,57 @@ export const practicalRows=[
     "대표 정지 이미지만 저장합니다. Live Photo 움직임·원본 메타데이터·HDR 표현 전체가 유지된다고 보장하지 않습니다. 사진이 다르게 보이면 HEIC 원본을 보관하고 촬영한 기기에서 비교하세요. 확장자를 .heic에서 .jpg로 바꾸기만 해서는 변환되지 않습니다.",
     "主静止画像のみ保存します。Live Photoの動き・元メタデータ・HDR表現全体の保持は保証しません。見た目が変わる場合はHEIC原本を残し、撮影端末で比較してください。拡張子を.heicから.jpgに変更するだけでは変換できません。",
     "仅导出主要静态图片，不保证保留Live Photo动态、原始元数据或完整HDR外观。显示不同时请保留HEIC原图并在拍摄设备上比较。仅将.heic改名为.jpg并不会转换文件。"
+  ],
+  [
+    "Before compression",
+    "압축 전",
+    "圧縮前",
+    "压缩前"
+  ],
+  [
+    "After compression",
+    "압축 후",
+    "圧縮後",
+    "压缩后"
+  ],
+  [
+    "Download original PDF",
+    "원본 PDF 다운로드",
+    "元のPDFを保存",
+    "下载原始PDF"
+  ],
+  [
+    "Download compressed PDF",
+    "압축한 PDF 다운로드",
+    "圧縮後のPDFを保存",
+    "下载压缩PDF"
+  ],
+  [
+    "First-page excerpt",
+    "첫 페이지 일부",
+    "1ページ目の抜粋",
+    "第一页局部"
+  ],
+  [
+    "Same 3 pages. Text and tables preserved.",
+    "3페이지 그대로, 글자와 표도 그대로",
+    "3ページのまま、文字と表も保持",
+    "仍为3页，文字和表格保持不变"
+  ],
+  [
+    "{0}% smaller",
+    "용량 {0}% 감소",
+    "容量を{0}%削減",
+    "文件大小减少{0}%"
+  ],
+  [
+    "This example was saved without compression. Already compressed files or scanned photos may shrink less.",
+    "압축하지 않고 저장한 예시 문서입니다. 이미 압축된 파일이나 스캔 사진은 용량이 덜 줄어들 수 있습니다.",
+    "圧縮せず保存した例です。圧縮済みファイルやスキャン画像では削減量が小さい場合があります。",
+    "本示例保存时未压缩。已压缩文件或扫描图片的大小可能减少得更少。"
   ]
 ];
-export const practicalLabels={"example":"A real conversion example","settings":"Choose settings for your task","fix":"If the result is not what you expected","input":"Download sample input","output":"Download sample result","note":"These measurements are from one test file, not a promised result for every file. Sizes use 1 KB = 1,000 bytes.","tested":"Measured with Paper Switch in Chromium on 22 September 2026.","source":"Public HEIC test file from libheif"};
+export const practicalLabels={"example":"A real conversion example","settings":"Choose settings for your task","fix":"If the result is not what you expected","input":"Download sample input","output":"Download sample result","note":"These measurements are from one test file, not a promised result for every file. Sizes use 1 KB = 1,000 bytes.","source":"Public HEIC test file from libheif","before":"Before compression","after":"After compression","pdfInput":"Download original PDF","pdfOutput":"Download compressed PDF","excerpt":"First-page excerpt","retained":"Same 3 pages. Text and tables preserved.","reduced":"{0}% smaller","pdfNote":"This example was saved without compression. Already compressed files or scanned photos may shrink less."};
 export const practicalGuides={
   "jpg-to-pdf": {
     "intro": "A photographed document becomes a PDF page, not an editable text document. Our original sample report lets you compare the picture and the generated PDF directly.",
@@ -159,7 +201,7 @@ export const practicalGuides={
     "metric": "pdfImage"
   },
   "compress-pdf": {
-    "intro": "This three-page sample contains text and repeated vector table rows. The input was deliberately saved without stream compression. It illustrates a favorable case, not a typical compression rate for scanned PDFs.",
+    "intro": "A three-page workshop plan with a schedule, checklist and budget. Compare the first-page excerpts below: the words and table stay the same after compression.",
     "settings": "Use this quality-first mode for reports with small text or diagrams. It does not lower image resolution or turn pages into pictures. Check the result size: if no space is saved, the download is the unchanged original.",
     "fix": "A scanned PDF may contain already compressed JPEGs, so lossless optimization can save very little. Do not expect a guaranteed 1 MB result. If an attachment still exceeds its limit, split the document or remove unnecessary pages. Signed and encrypted documents are excluded.",
     "input": "unoptimized.pdf",

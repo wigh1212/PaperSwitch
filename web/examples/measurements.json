@@ -10,9 +10,13 @@
       "height": 800
     },
     "pdfCompression": {
-      "input": 51545,
-      "output": 8560,
-      "pages": 3
+      "input": 133652,
+      "output": 65639,
+      "pages": 3,
+      "date": "2026-10-04",
+      "engine": "Paper Switch lossless compression",
+      "pixelsEqual": true,
+      "textEqual": true
     },
     "imageCompression": {
       "input": 53939,
