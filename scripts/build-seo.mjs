@@ -82,6 +82,7 @@ for(const base of routes){
    if(node.tagName==='a'){
     const href=attr(node,'href');
     if(href&&routes.includes(href)){set(node,'data-page-path',href);set(node,'href',localizedPath(href,language));}
+    else if(href?.startsWith('#')){set(node,'data-page-path',base+href);set(node,'href',localizedPath(base,language)+href);}
    }
    if(node.tagName==='option'&&node.parentNode?.tagName==='select'&&attr(node.parentNode,'id')==='language'){
     node.attrs=node.attrs.filter(a=>a.name!=='selected');if(attr(node,'value')===language)set(node,'selected','');

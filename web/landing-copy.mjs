@@ -1,13 +1,13 @@
 export const landingRows=[
   [
     "A place to sort out your files.",
-    "파일을 바꾸고, 정리하는 곳.",
+    "파일 변환과 정리, 한곳에서.",
     "ファイルを変えて、整える場所。",
     "转换文件，整理妥当。"
   ],
   [
     "Convert a photo, combine documents or reduce an attachment. Start with the file task you need.",
-    "사진 형식을 바꾸거나, 문서를 합치거나, 첨부 용량을 줄일 때. 지금 필요한 작업을 선택하세요.",
+    "사진 형식 변경부터 PDF 합치기, 첨부파일 용량 줄이기까지. 필요한 도구를 골라 바로 시작하세요.",
     "写真の形式変更、文書の結合、添付ファイルの圧縮。必要な作業から始めてください。",
     "转换照片格式、合并文档，或缩小附件。选择眼前需要的工具。"
   ],
@@ -442,13 +442,13 @@ export const landingRows=[
 landingRows.push(["Advertisement", "광고", "広告", "广告"]);
 
 export const homeUiRows = [
- ['PDFs, images and QR codes. Pick a tool to get started.', 'PDF, 이미지, QR. 필요한 도구로 바로 시작하세요.', 'PDF、画像、QR。必要なツールから始めましょう。', 'PDF、图片、二维码。选一个工具，马上开始。'],
+ ['PDFs, images and QR codes. Pick a tool to get started.', 'PDF를 합치고, 사진 형식을 바꾸고, 파일 용량을 줄이세요.', 'PDF、画像、QR。必要なツールから始めましょう。', 'PDF、图片、二维码。选一个工具，马上开始。'],
  ['Photo to PDF', '사진을 PDF로', '写真をPDFに', '照片转PDF'],
  ['PDF to images', 'PDF를 이미지로', 'PDFを画像に', 'PDF转图片'],
  ['Compress an image', '이미지 압축', '画像を圧縮', '压缩图片'],
  ['Combine PDFs', 'PDF 합치기', 'PDFを結合', '合并PDF'],
- ['Convert HEIC', 'HEIC 변환', 'HEICを変換', '转换HEIC'],
- ['Make a QR code', 'QR 만들기', 'QRを作成', '制作二维码'],
+ ['Convert HEIC', '아이폰 사진을 JPG로', 'HEICを変換', '转换HEIC'],
+ ['Make a QR code', 'QR 코드 만들기', 'QRを作成', '制作二维码'],
  ['Conversion notes and examples', '변환 안내와 실제 결과', '変換のヒントと実例', '转换说明与实际效果']
 ];
 landingRows.push(...homeUiRows);
