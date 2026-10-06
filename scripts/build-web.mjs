@@ -7,6 +7,7 @@ import {practicalGuide} from './practical-guides.mjs';
 import {pdfCompressRows} from '../web/pdf-compress-copy.mjs';
 import {htmlRows} from '../web/html-copy.mjs';
 import {gifRows} from '../web/gif-copy.mjs';
+import {experienceRows} from '../web/experience-copy.mjs';
 import {build} from 'esbuild';
 import {uxRows,guideSteps} from '../web/ux-copy.mjs';
 import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
@@ -34,6 +35,7 @@ await cp('web/gif-maker.js',out+'/assets/gif-maker.js');
 await cp('node_modules/gifenc/LICENSE.md',out+'/assets/vendor/gifenc-LICENSE');
 await build({entryPoints:['web/gif-worker.js'],outfile:out+'/assets/gif-worker.js',bundle:true,format:'esm',platform:'browser',minify:true});
 await cp('web/ux-copy.mjs',out+'/ux-copy.js');
+await cp('web/experience-copy.mjs',out+'/experience-copy.js');
 await cp('web/ads.txt',out+'/ads.txt');
 await cp('web/growth-copy.mjs',out+'/growth-copy.js');
 await mkdir(out+'/assets',{recursive:true});
@@ -110,7 +112,10 @@ for(const t of tools){
  const preferred=t.type==='pdfcompress'?['merge-pdf','split-pdf','extract-pdf-pages']:t.input==='pdf'&&t.type!=='heic'?['compress-pdf','merge-pdf','extract-pdf-pages','split-pdf']:t.type==='heic'?['image-compressor','jpg-to-pdf','image-resizer']:t.type==='pdfedit'?['merge-pdf','extract-pdf-pages','split-pdf','rotate-pdf']:t.type==='qr'?['wifi-qr','qr-generator','qr-reader']:t.slug==='image-compressor'?['image-resizer','jpg-to-pdf','heic-to-jpg']:[];
  const reverse=tools.find(x=>t.input&&x.input===t.output&&x.output===t.input&&x.slug!==t.slug);
  const related=[...new Set([...preferred,...(reverse?[reverse.slug]:[]),...tools.filter(x=>t.input&&x.input===t.input).map(x=>x.slug),'image-compressor','image-resizer'])].filter(slug=>slug!==t.slug).slice(0,4).map(slug=>tools.find(t=>t.slug===slug));
- html=html.replace('</main>',vectorExample(t.slug)+rasterExample(t.slug)+(hasRasterExample?'':toolFacts(t))+decisionGuide(t.slug)+practicalGuide(t.slug)+'<noscript><p>Enable JavaScript to use this tool.</p></noscript><section class="guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol>'+(hasRasterExample?'':'<h2>Output and limitations</h2><p>'+escape(t.note)+'</p>')+(t.slug==='merge-pdf'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
+ const ex=i=>escape(experienceRows[i][0]);
+ const overview='<noscript><aside class="javascript-notice"><h2>'+ex(3)+'</h2><p>'+ex(4)+'</p><a href="#tool-guide">'+ex(1)+'</a></aside></noscript>';
+
+ html=html.replace('</main>',overview+'<section class="guide" id="tool-guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol>'+(hasRasterExample?'':'<h2>Output and limitations</h2><p>'+escape(t.note)+'</p>')+(t.slug==='merge-pdf'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><div id="tool-details">'+vectorExample(t.slug)+rasterExample(t.slug)+(hasRasterExample?'':toolFacts(t))+decisionGuide(t.slug)+practicalGuide(t.slug)+'</div><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
  html=html.replace(/<script type="module" src="[^"]+"><\/script>/,'<script type="module" src="/site.js"></script>');

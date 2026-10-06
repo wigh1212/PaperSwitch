@@ -1,4 +1,5 @@
 import {rasterExampleRows} from '/raster-example-copy.js';
+import {experienceRows} from '/experience-copy.js';
 import {serviceRows} from '/service-content.js';
 import {factRows} from '/tool-facts.js';
 import {landingRows} from '/landing-copy.js';
@@ -16,6 +17,7 @@ import {initLanguages,registerTranslations,setLanguage} from '/assets/i18n.js';
 import {rows} from '/copy.js';
 registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);
 registerTranslations(seoRows);
+registerTranslations(experienceRows);
 registerTranslations(searchRows);
 if(document.body.dataset.tool==='svg-to-png')registerTranslations((await import('/vector-example-copy.js')).vectorExampleRows);
 setLanguage(document.body.dataset.routeLanguage||splitPath(location.pathname).language);

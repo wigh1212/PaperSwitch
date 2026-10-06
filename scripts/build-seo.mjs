@@ -1,4 +1,5 @@
 import {vectorExampleRows} from '../web/vector-example-copy.mjs';
+import {experienceRows} from '../web/experience-copy.mjs';
 import {indexableRoutes} from '../web/routes.mjs';
 import {rasterExampleRows} from '../web/raster-example-copy.mjs';
 import {serviceRows} from '../web/service-content.mjs';
@@ -22,7 +23,7 @@ import {rows} from '../web/copy.mjs';
 import {seoRows,faqPairs,faqsFor} from '../web/seo-copy.mjs';
 import {searchCopy,searchRows} from '../web/search-copy.mjs';
 const searchTranslations=searchRows(tools);
-registerTranslations(vectorExampleRows);registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
+registerTranslations(experienceRows);registerTranslations(vectorExampleRows);registerTranslations(rasterExampleRows);registerTranslations(serviceRows);registerTranslations(factRows);registerTranslations(landingRows);registerTranslations(practicalRows);registerTranslations(pdfCompressRows);registerTranslations(htmlRows);registerTranslations(gifRows);registerTranslations(compressorRows);registerTranslations(frameRows);registerTranslations(growthRows);registerTranslations(uxRows);registerTranslations(rows);registerTranslations(seoRows);registerTranslations(searchTranslations);
 await writeFile('dist/search-copy.js','export const searchRows='+JSON.stringify(searchTranslations)+';');
 const routes=indexableRoutes;
 const attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;
