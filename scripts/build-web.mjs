@@ -1,4 +1,6 @@
 import {vectorExample} from './vector-example.mjs';
+import {focusToolPage} from './focus-tool-page.mjs';
+import {taskGuideRows,taskGuides} from '../web/task-guides.mjs';
 import {rasterExample} from './raster-examples.mjs';
 import {serviceContent as service} from '../web/service-content.mjs';
 import {factContent as facts} from '../web/tool-facts.mjs';
@@ -20,6 +22,8 @@ await cp('web/raster-example-copy.mjs',out+'/raster-example-copy.js');
 await cp('web/service-content.mjs',out+'/service-content.js');
 await cp('web/tool-facts.mjs',out+'/tool-facts.js');
 await cp('web/practical-guides.mjs',out+'/practical-guides.js');
+await cp('web/task-guides.mjs',out+'/task-guides.js');
+await cp('web/conversion-notes.mjs',out+'/conversion-notes.js');
 await cp('web/examples',out+'/assets/examples',{recursive:true});
 await mkdir(out+'/assets',{recursive:true});
 await cp('web/pdf-compress-copy.mjs',out+'/pdf-compress-copy.js');
@@ -85,10 +89,15 @@ const examples='<section class="landing-section"><div class="section-heading"><h
 const homeAdSlot=(process.env.ADSENSE_HOME_SLOT||'').trim();
 if(homeAdSlot&&!/^\d{10}$/.test(homeAdSlot))throw new Error('ADSENSE_HOME_SLOT must be a 10-digit AdSense display ad-unit ID');
 const homeAd=homeAdSlot?'<aside class="home-ad" aria-label="Advertisement"><span class="home-ad-label">Advertisement</span><ins class="adsbygoogle" data-home-ad data-ad-client="ca-pub-6110796878581495" data-ad-slot="'+homeAdSlot+'"></ins></aside>':'';
-let home=shell(landingRows[0][0],landingRows[1][0],'');home=home.replace('</head>','<link rel="stylesheet" href="/home.css"></head>').replace('<body>','<body class="landing">').replace(/<main>[\s\S]*?<\/main>/,'<main>'+hero+quickHtml+'<div class="home-directory">'+browse+'</div>'+homeAd+'<details class="home-notes"><summary>'+homeText(7)+'</summary><div class="home-evidence">'+proof+examples+'</div>'+choices+'</details></main>');
+let home=shell(landingRows[0][0],landingRows[1][0],'');home=home.replace('</head>','<link rel="stylesheet" href="/home.css"></head>').replace('<body>','<body class="landing">').replace(/<main>[\s\S]*?<\/main>/,'<main>'+hero+quickHtml+'<div class="home-directory">'+browse+'</div>'+homeAd+'<section class="home-notes"><h2>'+homeText(7)+'</h2><div class="home-evidence">'+proof+examples+'</div>'+choices+'</section></main>');
 await writeFile(out+'/index.html',home);
 const decisionGuide=slug=>{const sections={'image-compressor':[[1,2],[3,4],[5,6]],'compress-pdf':[[7,8],[9,10]],'jpg-to-pdf':[[11,12],[13,14]]}[slug];return sections?'<section class="decision-guide" id="settings-guide"><h2>'+lr(48)+'</h2>'+sections.map(([h,p])=>'<article><h3>'+lr(48+h)+'</h3><p>'+lr(48+p)+'</p></article>').join('')+'</section>':'';};
 const toolFacts=t=>{if(t.type!=='convert'||t.slug==='merge-pdf')return '';const input=facts.formats[t.input]||label(t.input),output=facts.outputs[t.output]||label(t.output);return '<section class="tool-facts"><h2>'+escape(facts.title)+'</h2><dl><div><dt>'+escape(facts.input)+'</dt><dd>'+escape(input)+'</dd></div><div><dt>'+escape(facts.output)+'</dt><dd>'+escape(output)+'</dd></div><div><dt>'+escape(facts.limits)+'</dt><dd><p>'+escape(facts.batch)+'</p>'+(t.input==='pdf'?'<p>'+escape(facts.range)+'</p>':'')+'</dd></div></dl></section>';};
+const taskGuidance=slug=>{
+ const sections=taskGuides[slug];if(!sections)return '';
+ const groups=new Map();for(const [heading,paragraph] of sections){if(!groups.has(heading))groups.set(heading,[]);groups.get(heading).push(paragraph);}
+ return '<section class="task-guidance">'+[...groups].map(([heading,paragraphs])=>'<h2>'+escape(taskGuideRows[heading][0])+'</h2>'+paragraphs.map(i=>'<p>'+escape(taskGuideRows[i][0])+'</p>').join('')).join('')+'</section>';
+};
 for(const t of tools){
  const engine=t.type==='pdfcompress'?'pdf-compressor':t.type==='html'?'html-to-pdf':t.type==='gif'?'gif-maker':['heic','pdfedit'].includes(t.type)?'file-tools':t.type==='compressor'?'image-compressor':t.type==='convert'?'app':t.type==='qr'?'qr':'image-editor';
  let html=await readFile((['pdfcompress','html','gif','compressor','heic','pdfedit'].includes(t.type)?'web/':'extension/')+(engine==='app'?'index':engine)+'.html','utf8');
@@ -106,16 +115,20 @@ for(const t of tools){
   html=html.replace('<div class="qr-settings"><label><input id="image-remove"','<div class="qr-settings" hidden><label><input id="image-remove"');
   html=html.replace(/<p>Click the original image[\s\S]*?<\/p><p>For solid backgrounds[\s\S]*?<\/p>/,'');
  }
+ html=focusToolPage(html,t);
  const hasRasterExample=Boolean(rasterExample(t.slug));
- const steps=t.type==='pdfcompress'?pdfCompressRows.slice(21,24).map(r=>r[0]):t.type==='html'?htmlRows.slice(23,26).map(r=>r[0]):t.type==='gif'?gifRows.slice(24,27).map(r=>r[0]):guideSteps(t)||(t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.','Review the options and convert.','Download your results.'])
+ const reviewStep=/id="(?:pdf-options|webp-options|ocr-options|pdf-output-options)"/.test(html)?'Review the options and convert.':experienceRows[5][0];
+ const steps=t.type==='pdfcompress'?pdfCompressRows.slice(21,24).map(r=>r[0]):t.type==='html'?htmlRows.slice(23,26).map(r=>r[0]):t.type==='gif'?gifRows.slice(24,27).map(r=>r[0]):guideSteps(t)||(t.type==='compressor'?['Choose an image, set a target size and compress.']:t.type==='convert'?(t.slug==='merge-pdf'?['Arrange your PDFs, merge and download.']:['Select your '+label(t.input)+' files.',reviewStep,'Download your results.'])
  :t.slug==='qr-generator'?['Enter text, create a QR code and download the PNG.']:t.slug==='qr-reader'?['Choose a QR image and copy its contents.']:['Select an image, set dimensions and download the PNG.']);
  const preferred=t.type==='pdfcompress'?['merge-pdf','split-pdf','extract-pdf-pages']:t.input==='pdf'&&t.type!=='heic'?['compress-pdf','merge-pdf','extract-pdf-pages','split-pdf']:t.type==='heic'?['image-compressor','jpg-to-pdf','image-resizer']:t.type==='pdfedit'?['merge-pdf','extract-pdf-pages','split-pdf','rotate-pdf']:t.type==='qr'?['wifi-qr','qr-generator','qr-reader']:t.slug==='image-compressor'?['image-resizer','jpg-to-pdf','heic-to-jpg']:[];
  const reverse=tools.find(x=>t.input&&x.input===t.output&&x.output===t.input&&x.slug!==t.slug);
  const related=[...new Set([...preferred,...(reverse?[reverse.slug]:[]),...tools.filter(x=>t.input&&x.input===t.input).map(x=>x.slug),'image-compressor','image-resizer'])].filter(slug=>slug!==t.slug).slice(0,4).map(slug=>tools.find(t=>t.slug===slug));
  const ex=i=>escape(experienceRows[i][0]);
  const overview='<noscript><aside class="javascript-notice"><h2>'+ex(3)+'</h2><p>'+ex(4)+'</p><a href="#tool-guide">'+ex(1)+'</a></aside></noscript>';
+ const processingMessage=t.type==='qr'?ex(t.slug==='qr-reader'?6:7):'Selected files are processed in your browser. Download the results before closing this page.';
+ html=html.replace(/(<p class="intro">[\s\S]*?<\/p>)/,'$1<nav class="task-sections" aria-label="'+ex(0)+'"><a href="#tool-guide">'+ex(1)+'</a><a href="#tool-details">'+ex(2)+'</a></nav>');
 
- html=html.replace('</main>',overview+'<section class="guide" id="tool-guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol>'+(hasRasterExample?'':'<h2>Output and limitations</h2><p>'+escape(t.note)+'</p>')+(t.slug==='merge-pdf'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'<p>Selected files are processed in your browser. Download the results before closing this page.</p></section><div id="tool-details">'+vectorExample(t.slug)+rasterExample(t.slug)+(hasRasterExample?'':toolFacts(t))+decisionGuide(t.slug)+practicalGuide(t.slug)+'</div><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
+ html=html.replace('</main>',overview+'<section class="guide" id="tool-guide"><h2>How it works</h2><ol>'+steps.map(s=>'<li>'+escape(s)+'</li>').join('')+'</ol><p>'+processingMessage+'</p></section><div id="tool-details"><section class="guide task-limitations"><h2>Output and limitations</h2><p>'+escape(t.note)+'</p>'+(t.slug==='merge-pdf'?'<p>Up to 20 files · 50 MB each · 100 MB total. PDF inputs: up to 100 pages per file. Password-protected PDFs are not supported.</p>':'')+'</section>'+vectorExample(t.slug)+rasterExample(t.slug)+(hasRasterExample?'':toolFacts(t))+decisionGuide(t.slug)+practicalGuide(t.slug)+taskGuidance(t.slug)+'</div><section class="related"><h2>Continue with a related task</h2><div>'+related.map(link).join('')+'</div></section></main>');
  html=html.replace(/<footer>[\s\S]*?<\/footer>/,footer);
  if(!html.includes('<footer'))html=html.replace('</body>',footer+'</body>');
  html=html.replace(/<script type="module" src="[^"]+"><\/script>/,'<script type="module" src="/site.js"></script>');

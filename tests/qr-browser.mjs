@@ -33,6 +33,7 @@ try {
   await page.fill('#qr-text',text);await page.click('#qr-generate');await page.locator('#qr-download').waitFor({state:'visible'});
   let pending=page.waitForEvent('download');await page.click('#qr-download');await(await pending).saveAs('test-results/qr-plain.png');
   await page.setInputFiles('#qr-upload','test-results/qr-plain.png');await page.waitForFunction(()=>!document.getElementById('qr-copy').disabled);assert.equal(await page.inputValue('#qr-value'),text);
+  await page.locator('.qr-advanced summary').click();
   await page.setInputFiles('#qr-logo','test-results/qr-test-logo.png');await page.fill('#qr-color','#245d46');await page.click('#qr-generate');await page.locator('#qr-download').waitFor({state:'visible'});
   pending=page.waitForEvent('download');await page.click('#qr-download');await(await pending).saveAs('test-results/qr-logo.png');
   await page.setInputFiles('#qr-upload','test-results/qr-logo.png');await page.waitForFunction(()=>!document.getElementById('qr-copy').disabled);assert.equal(await page.inputValue('#qr-value'),text);

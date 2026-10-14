@@ -5,7 +5,7 @@ import {services} from './bootstrap.js';
 import {runBatch,validateBatch} from './services/batch-service.js';
 const $=id=>document.getElementById(id);
 import {modes,sourceTabs} from './conversions.js';
-for(const [value,label] of ocrLanguages){const option=document.createElement('option');option.value=value;option.textContent=label;$('ocr-language').append(option);}
+if($('ocr-language'))for(const [value,label] of ocrLanguages){const option=document.createElement('option');option.value=value;option.textContent=label;$('ocr-language').append(option);}
 let mode='pdf',files=[],busy=false,generation=0,controller=null;
 const readable=n=>n<1048576?`${(n/1024).toFixed(1)} KB`:`${(n/1048576).toFixed(1)} MB`;
 function status(message='',error=false){setText($('status'),message);$('status').classList.toggle('error',error);}
@@ -14,15 +14,16 @@ function setBusy(value){busy=value;document.querySelectorAll('.mode,.source-tab,
 function reset(){files=[];$('file').value='';$('selection').hidden=true;$('queue').replaceChildren();clearResult();status();setBusy(false);}
 function switchMode(next){
   if(busy)return;mode=next;reset();const config=modes[mode];
-  $('pdf-output-options').hidden=config.output!=='pdf'||config.operation==='merge';
+  if($('pdf-output-options'))$('pdf-output-options').hidden=config.output!=='pdf'||config.operation==='merge';
   updatePDFOutput();
-  $('ocr-options').hidden=next!=='pdf-txt';
-  for(const key of Object.keys(modes)){$(`${key}-mode`).classList.toggle('selected',key===mode);$(`${key}-mode`).setAttribute('aria-pressed',String(key===mode));}
+  if($('ocr-options'))$('ocr-options').hidden=next!=='pdf-txt';
+  for(const key of Object.keys(modes)){const button=$(`${key}-mode`);if(button){button.classList.toggle('selected',key===mode);button.setAttribute('aria-pressed',String(key===mode));}}
   $('file').accept=config.input==='jpg'?'.jpg,.jpeg':config.input==='tiff'?'.tif,.tiff':`.${config.input}`;setText($('accept-hint'),`${config.input.toUpperCase()} · 최대 20개 · 파일당 50 MB · 합계 100 MB`);
-  $('pdf-options').hidden=config.input!=='pdf'||config.operation==='merge';$('webp-options').hidden=!(['pdf','tiff'].includes(config.input)&&['webp','jpg','png','tiff'].includes(config.output));
-  if(config.input==='svg'&&config.output!=='pdf')$('webp-options').hidden=false;
+  if($('pdf-options'))$('pdf-options').hidden=config.input!=='pdf'||config.operation==='merge';
+  if($('webp-options'))$('webp-options').hidden=!(['pdf','tiff'].includes(config.input)&&['webp','jpg','png','tiff'].includes(config.output));
+  if(config.input==='svg'&&config.output!=='pdf'&&$('webp-options'))$('webp-options').hidden=false;
   const svgImage=config.input==='svg'&&config.output!=='pdf';
-  [...$('scale').options].forEach((option,i)=>setText(option,svgImage?`${i+1}× · Original pixel dimensions`:['Standard · 72 dpi','Sharp · 144 dpi','Extra sharp · 216 dpi'][i]));
+  if($('scale'))[...$('scale').options].forEach((option,i)=>setText(option,svgImage?`${i+1}× · Original pixel dimensions`:['Standard · 72 dpi','Sharp · 144 dpi','Extra sharp · 216 dpi'][i]));
   setText($('convert'),`${config.output.toUpperCase()}로 변환`);
   setText($('mode-note'),config.input==='pdf'?'페이지마다 파일을 만들어요. 여러 결과는 ZIP으로도 저장해요.':'파일마다 별도의 PDF를 만들어요. 여러 결과는 ZIP으로도 저장해요.');
   if(config.operation==='merge'){setText($('convert'),'Merge PDFs');setText($('mode-note'),'Merge all pages in the order below. Use the arrows to change the file order.');}
@@ -50,8 +51,9 @@ function results(entries,success,failed,config){
   setText($('download'),prepared.files.length===1?'Download file':'Download all as ZIP');
   setText($('result-info'),'Succeeded: '+success+' · Failed: '+failed+' · Outputs: '+prepared.files.length+' · '+readable(prepared.main.size));$('result').hidden=false;
 }
-for(const key of Object.keys(modes))$(`${key}-mode`).onclick=()=>switchMode(key);
+for(const key of Object.keys(modes))if($(`${key}-mode`))$(`${key}-mode`).onclick=()=>switchMode(key);
 function updatePDFOutput(){
+  if(!$('pdf-output-note'))return;
   const combined=document.querySelector('[name="pdf-output"]:checked').value==='combined';
   setText($('pdf-output-note'),combined?'Combine all pages in list order. Use Move up and Move down to reorder files.':'Create a separate PDF for each file.');
 }
@@ -65,7 +67,7 @@ $('convert').onclick=async()=>{
   if(busy||!files.length)return;
   const job=++generation,config=modes[mode],batch=[...files];
   controller=new AbortController();const signal=controller.signal;
-  const options={pdfOutput:document.querySelector('[name="pdf-output"]:checked').value,pages:$('pages').value,scale:Number($('scale').value),ocr:$('ocr-mode').value,ocrLanguage:$('ocr-language').value};
+  const options={pdfOutput:document.querySelector('[name="pdf-output"]:checked')?.value||'individual',pages:$('pages')?.value||'',scale:Number($('scale')?.value||2),ocr:$('ocr-mode')?.value||'auto',ocrLanguage:$('ocr-language')?.value||'eng'};
   clearResult();setBusy(true);$('progress').value=0;
   try{
     const result=await runBatch({files:batch,config,options,service:services.conversion,access:services.access,signal,
@@ -90,24 +92,16 @@ $('convert').onclick=async()=>{
   finally{if(job===generation){controller=null;setBusy(false);}}
 };
 window.addEventListener('beforeunload',()=>{controller?.abort();services.downloads.clear();});
-switchMode('pdf');
+switchMode(document.body.dataset.toolMode&&modes[document.body.dataset.toolMode]?document.body.dataset.toolMode:'pdf');
 function selectTab(tab){
   if(busy)return;
   for(const key of sourceTabs){$(`${key}-panel`).hidden=key!==tab;$(`${key}-tab`).setAttribute('aria-selected',String(key===tab));$(`${key}-tab`).tabIndex=key===tab?0:-1;}
   switchMode(tab==='pdf'?'pdf':tab==='svg'?'svg-pdf':`${tab}-tab-${tab}-pdf`);
 }
 for(const tab of sourceTabs){
+  if(!$(`${tab}-tab`))continue;
   $(`${tab}-tab`).onclick=()=>selectTab(tab);
   $(`${tab}-tab`).onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const tabs=sourceTabs;const next=e.key==='Home'?'pdf':e.key==='End'?tabs.at(-1):tabs[(tabs.indexOf(tab)+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];selectTab(next);$(`${next}-tab`).focus();}};
 }
-initNavigation();
+if($('convert-tab'))initNavigation();
 initLanguages();
-
-
-
-
-
-
-
-// Dedicated web pages choose their conversion before interaction.
-if(document.body.dataset.toolMode && modes[document.body.dataset.toolMode]) switchMode(document.body.dataset.toolMode);

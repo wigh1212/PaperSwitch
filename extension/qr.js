@@ -8,13 +8,16 @@ const $=id=>document.getElementById(id);
 const wifi=document.body.dataset.tool==='wifi-qr';
 const content=()=>wifi?wifiPayload({ssid:$('wifi-ssid').value,password:$('wifi-password').value,security:$('wifi-security').value,hidden:$('wifi-hidden').checked}):$('qr-text').value;
 let url=null,revision=0,selectedFrame='none';
+if($('create')){
 function clear(){revision++;if(url)URL.revokeObjectURL(url);url=null;$('qr-preview').replaceChildren();$('qr-empty').hidden=false;$('qr-download').hidden=true;$('qr-download').removeAttribute('href');setText($('qr-status'),'');}
-for(const id of ['qr-text','qr-color','qr-logo'])$(id).addEventListener('input',clear);
+for(const id of ['qr-text','qr-color','qr-logo'])$(id)?.addEventListener('input',clear);
+if($('wifi-fields')){
 for(const id of ['wifi-ssid','wifi-password','wifi-security','wifi-hidden'])$(id).addEventListener('input',()=>{if(id==='wifi-security')$('wifi-password').disabled=$('wifi-security').value==='nopass';clear();});
 $('wifi-show-password').onchange=()=>{$('wifi-password').type=$('wifi-show-password').checked?'text':'password';};
 const exampleAvailable=()=>{$('wifi-example').disabled=Boolean($('wifi-ssid').value||$('wifi-password').value);};
 for(const id of ['wifi-ssid','wifi-password'])$(id).addEventListener('input',exampleAvailable);
 $('wifi-example').onclick=()=>{if($('wifi-ssid').value||$('wifi-password').value)return;$('wifi-ssid').value='iptime';$('wifi-password').value='coffee2026!';$('wifi-security').value='WPA';$('wifi-password').disabled=false;$('wifi-hidden').checked=false;exampleAvailable();clear();$('wifi-ssid').focus();};
+}
 $('qr-remove-logo').onclick=()=>{$('qr-logo').value='';clear();};
 $('qr-generate').onclick=async()=>{
   clear();const job=revision;$('qr-generate').disabled=true;
@@ -36,6 +39,8 @@ let expanded=false;$('qr-more-frames').onclick=()=>{expanded=!expanded;$('qr-mor
 for(const id of ['qr-frame-title','qr-frame-description'])$(id).oninput=refreshFrame;
 // Thumbnails use a sample QR; the final preview always uses the user's content.
 generateQR('https://example.com').then(sample=>{for(const button of document.querySelectorAll('[data-frame]')){const preview=frameQR(sample,{frame:button.dataset.frame,title:'Aa',description:'—'}),canvas=button.querySelector('canvas'),ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,110,140);const scale=Math.min(106/preview.width,136/preview.height);ctx.drawImage(preview,(110-preview.width*scale)/2,2,preview.width*scale,preview.height*scale);}}).catch(()=>{});
+}
+if($('read')){
 let scanRevision=0;
 $('qr-upload').onchange=async()=>{
   const job=++scanRevision;$('qr-value').value='';$('qr-copy').disabled=true;setText($('qr-read-status'),'');
@@ -45,5 +50,6 @@ $('qr-upload').onchange=async()=>{
   catch(error){if(job===scanRevision)setText($('qr-read-status'),error.message);}
 };
 $('qr-copy').onclick=async()=>{try{await navigator.clipboard.writeText($('qr-value').value);setText($('qr-read-status'),'Copied.');}catch{setText($('qr-read-status'),'Select the text and copy it manually.');}};
+}
 window.addEventListener('beforeunload',()=>{if(url)URL.revokeObjectURL(url);});
 initLanguages();

@@ -4,6 +4,7 @@ import {gifRows} from './gif-copy.mjs';
 import {growthTools} from './growth-copy.mjs';
 import {compressorRows} from './compressor-copy.mjs';
 import {modes} from '../extension/conversions.js';
+import {conversionNote} from './conversion-notes.mjs';
 export const formats=['pdf','heic','png','svg','jpg','webp','tiff','txt','html'];
 export const label=f=>f==='webp'?'WEBP':f.toUpperCase();
 const unique=new Map();
@@ -21,6 +22,7 @@ for(const [mode,config] of Object.entries(modes)){
  :input==='pdf'?'Raster output uses a white background and cannot preserve selectable text or editable vectors. Choose a resolution suited to your needs.'
  :input==='tiff'||output==='tiff'?'TIFF pages are processed individually. Uncompressed TIFF output can be large.'
  :'Keep original pixel dimensions. Transparency becomes white, and animated WEBP uses its first frame. Re-encoding cannot recover lost detail.';
+ if(!['pdf','svg','txt'].includes(input))note=conversionNote(input,output);
  unique.set(slug,{slug,mode,input,output,title:label(input)+' to '+label(output),description:'Convert '+label(input)+' files to '+label(output)+' in your browser.',note,type:'convert'});
 }
 export const tools=[{slug:"compress-pdf",type:"pdfcompress",input:"pdf",title:pdfCompressRows[3][0],description:pdfCompressRows[1][0],note:pdfCompressRows[2][0]},{slug:"html-to-pdf",input:"html",output:"pdf",type:"html",title:"HTML to PDF",description:htmlRows[1][0],note:htmlRows[2][0]},{slug:"gif-maker",type:"gif",title:gifRows[3][0],description:gifRows[1][0],note:gifRows[2][0]},...growthTools,{slug:"image-compressor",type:"compressor",title:compressorRows[0][0],description:compressorRows[1][0],note:compressorRows[2][0]},...unique.values(),{slug:'merge-pdf',mode:'pdf-merge',input:'pdf',output:'pdf',type:'convert',title:'Merge PDF',description:'Combine PDF documents in your chosen order.',note:'All pages are merged. Bookmarks and digital signatures are not preserved.'},

@@ -5,6 +5,7 @@ import {jsPDF} from 'jspdf';
 import mupdf from '../extension/vendor/mupdf/mupdf.js';
 import {wifiPayload} from '../extension/services/wifi-service.js';
 import {growthEntries} from '../web/growth-copy.mjs';
+import {locales,localizedPath} from '../web/seo-config.mjs';
 const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{
@@ -33,6 +34,6 @@ try{
   const result=await page.locator('#ft-results a').first().evaluate(async a=>{const b=await(await fetch(a.href)).blob(),im=await createImageBitmap(b);const result={width:im.width,height:im.height,size:b.size,name:a.download};im.close();return result;});assert.ok(result.width>0&&result.height>0&&result.size>0);assert.ok(result.name.endsWith('.'+output));
  }
  console.log('PASS real HEIC to JPG and PNG decoding');
- for(const entry of growthEntries)for(const [i,prefix] of ['', '/ko','/ja','/zh-cn'].entries()){const html=await readFile('dist'+prefix+'/'+entry[0]+'.html','utf8');assert.ok(html.includes(entry[i+1]),entry[0]+prefix);assert.ok(html.includes('rel="canonical"'));assert.ok(html.includes('adsbygoogle.js'));}
+ for(const entry of growthEntries)for(const [i,locale] of locales.entries()){const path=localizedPath('/'+entry[0],locale.language),html=await readFile('dist'+path+'.html','utf8');assert.ok(html.includes(entry[i+1]),path);assert.ok(html.includes('rel="canonical"'));assert.ok(html.includes('adsbygoogle.js'));}
  assert.deepEqual(errors,[]);console.log('PASS 28 localized pages and no browser errors');
 }finally{await browser.close();}

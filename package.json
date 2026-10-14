@@ -22,6 +22,7 @@
     "test:web:html-pdf": "node tests/web-html-pdf.mjs",
     "test:web:pdf-compress": "node tests/web-pdf-compress.mjs",
     "test:web:practical-guides": "node tests/web-practical-guides.mjs",
+    "test:web:focused": "node tests/web-focused-pages.mjs",
     "test:site-audit": "node tests/site-audit.mjs",
     "test:web:site-audit": "node tests/web-site-audit.mjs",
     "seo:check": "node tests/site-audit.mjs && node --test tests/sitemaps.test.mjs tests/worker-indexing.test.mjs",

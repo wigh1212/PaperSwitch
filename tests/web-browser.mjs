@@ -28,8 +28,8 @@ try{
   const response=await page.goto('http://127.0.0.1:4173/'+tool.slug);
   assert.equal(response.status(),200);
   await page.waitForLoadState('networkidle');
-  assert.equal(await page.locator('h1').textContent(),searchCopy(tool).title[0].split(' – ')[0]);
-  assert.equal(await page.locator('meta[name="description"]').getAttribute('content'),searchCopy(tool).description[0]);
+  assert.equal(await page.locator('h1').textContent(),searchCopy(tool).title[1].split(' – ')[0]);
+  assert.equal(await page.locator('meta[name="description"]').getAttribute('content'),searchCopy(tool).description[1]);
   if(tool.type==='convert'){
    const input=tool.slug==='merge-pdf'?'pdf':tool.slug.split('-')[0];
    const output=tool.slug==='merge-pdf'?'pdf':tool.slug.split('-').at(-1);
@@ -45,13 +45,13 @@ try{
    if(output==='pdf')assert.equal(Buffer.from(result.bytes).subarray(0,5).toString(),'%PDF-');
    if(output==='txt')assert(Buffer.from(result.bytes).toString().includes('Paper Switch test'));
   }else if(tool.slug==='qr-generator'){
-   assert.equal(await page.locator('#read').isVisible(),false);
+   assert.equal(await page.locator('#read').count(),0);
    await page.locator('#qr-text').fill('https://example.com/paper-switch');
    await page.locator('#qr-generate').click();
    await page.locator('#qr-download').waitFor({state:'visible',timeout:30000});
    fixtures.qr=await page.locator('#qr-download').evaluate(async el=>[...new Uint8Array(await (await fetch(el.href)).arrayBuffer())]);
   }else if(tool.slug==='qr-reader'){
-   assert.equal(await page.locator('#create').isVisible(),false);
+   assert.equal(await page.locator('#create').count(),0);
    await page.locator('#qr-upload').setInputFiles({name:'qr.png',mimeType:'image/png',buffer:Buffer.from(fixtures.qr)});
    await page.waitForFunction(()=>document.getElementById('qr-value').value==='https://example.com/paper-switch');
   }else{
@@ -68,10 +68,10 @@ try{
  await page.setViewportSize({width:390,height:844});
  await page.screenshot({path:'test-results/web-mobile.png',fullPage:true});
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile overflow');
- await page.goto('http://127.0.0.1:4173/not-a-tool');assert.equal(await page.locator('h1').textContent(),'Page not found');
+ await page.goto('http://127.0.0.1:4173/not-a-tool');assert.equal(await page.locator('h1').textContent(),'페이지를 찾을 수 없습니다');
  assert.deepEqual(errors,[]);
  const noJS=await browser.newContext({javaScriptEnabled:false});const raw=await noJS.newPage();
- await raw.goto('http://127.0.0.1:4173/pdf-to-txt');assert.equal(await raw.locator('h1').textContent(),searchCopy(tools.find(t=>t.slug==='pdf-to-txt')).title[0].split(' – ')[0]);assert(await raw.locator('.guide').first().isVisible());await noJS.close();
+ await raw.goto('http://127.0.0.1:4173/pdf-to-txt');assert.equal(await raw.locator('h1').textContent(),searchCopy(tools.find(t=>t.slug==='pdf-to-txt')).title[1].split(' – ')[0]);assert(await raw.locator('.guide').first().isVisible());await noJS.close();
  console.log('PASS mobile, metadata, 404 and JavaScript-disabled content');
 }finally{await browser.close();}
 
